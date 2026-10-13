@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>the.shcherba — графический и web дизайнер</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <!-- РАУНД 36: экран загрузки — см. комментарий у .loading-screen в main.css и js/loader.js.
+       Виден сразу (чистый CSS, не ждёт JS), прячется сам после полной загрузки страницы. -->
+    <div class="loading-screen" id="loading-screen" aria-hidden="true">
+      <div class="loading-screen-inner">
+        <img
+          class="loading-screen-gif"
+          src="assets/loading/happy-cat.gif"
+          alt=""
+        />
+        <p class="loading-screen-text">Loading...</p>
+      </div>
+    </div>
+
+    <!-- первый экран -->
+    <section id="top" class="hero">
+      <div class="hero-headline">
+        <!-- РАУНД 29: настоящий текст для скринридеров — один источник, т.к. ниже тот же текст
+           показан визуально дважды (десктопная/мобильная разбивка на строки, см. main.css). -->
+        <h1 class="sr-only">
+          Графический и web дизайнер: от бренда с нуля до феста для десяти тысяч
+          человек, и не только :)
+        </h1>
+        <img
+          class="hero-star"
+          src="assets/figma/hero-star.svg"
+          alt=""
+          width="21"
+          height="21"
+        />
+        <div class="hero-lines hero-lines--desktop" aria-hidden="true">
+          <span class="hero-line">Графический И WEB дизайнер:</span>
+          <span class="hero-line">от бренда с нуля до феста&nbsp;</span>
+          <span class="hero-line">для десяти тысяч человек</span>
+        </div>
+        <div class="hero-lines hero-lines--mobile" aria-hidden="true">
+          <span class="hero-line-m">Графический И WEB</span>
+          <span class="hero-line-m">дизайнер: от бренда</span>
+          <span class="hero-line-m">с нуля до феста</span>
+          <span class="hero-line-m">для десяти тысяч</span>
+          <span class="hero-line-m">человек</span>
+        </div>
+        <span class="hero-accent" aria-hidden="true"
+          >и не только <span class="hero-accent-smiley">:)</span></span
+        >
+      </div>
+
+      <div class="hero-bottom">
+        <div class="hero-greeting">
+          <div class="hero-photo">
+            <img
+              src="assets/photos/lena.jpg"
+              alt="Лена"
+              width="125"
+              height="142"
+            />
+          </div>
+          <p class="hero-greeting-text">
+            Привет<span class="hero-greeting-text-comma">,</span><br />я Лена
+          </p>
+        </div>
+        <ul class="hero-stats">
+          <li>3+ года опыта</li>
+          <li>30+ проектов</li>
+          <li>Работа в Яндекс</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- работы -->
+    <section id="works" class="works">
+      <div class="section-header">
+        <span class="section-label">работы</span>
+        <span class="section-counter">(1)</span>
+      </div>
+
+      <a class="work-row" href="young-con.html">
+        <div class="work-info">
+          <span class="work-tag">фестиваль</span>
+          <h3 class="work-title">
+            Young Con <span class="work-number">2026</span>
+          </h3>
+        </div>
+        <div class="work-image work-image--wide">
+          <img src="assets/photos/works/young-con.jpg" alt="Young Con 2026" />
+        </div>
+        <div class="work-meta">
+          <div class="work-facts">
+            <span>май-июнь 2026</span>
+            <span>10 тыс. участников</span>
+          </div>
+          <ul class="work-tags">
+            <li>ai</li>
+            <li>ретушь</li>
+            <li>баннеры</li>
+            <li>ивент-дизайн</li>
+            <li>большой объем</li>
+            <li>видеографика</li>
+          </ul>
+        </div>
+      </a>
+
+      <div class="work-divider"></div>
+
+      <a class="work-row" href="yandex.html">
+        <div class="work-info">
+          <span class="work-tag">работа в компании</span>
+          <h3 class="work-title">Yandex</h3>
+        </div>
+        <div class="work-image work-image--wide">
+          <img src="assets/photos/works/yandex.jpg" alt="Yandex" />
+        </div>
+        <div class="work-meta">
+          <div class="work-facts">
+            <span>2025-2026</span>
+            <span>60+ проектов</span>
+          </div>
+          <ul class="work-tags">
+            <li>ai</li>
+            <li>ретушь</li>
+            <li>мерч</li>
+            <li>баннеры</li>
+            <li>инфографика</li>
+            <li>брендинг</li>
+            <li>иллюстрации</li>
+            <li>полиграфия</li>
+            <li>раскадровка</li>
+          </ul>
+        </div>
+      </a>
+
+      <div class="work-divider"></div>
+
+      <a class="work-row" href="thothex.html">
+        <div class="work-info">
+          <span class="work-tag">стартап</span>
+          <h3 class="work-title">Thothex</h3>
+        </div>
+        <div class="work-image work-image--square">
+          <img src="assets/photos/works/thothex.jpg" alt="Thothex" />
+        </div>
+        <div class="work-meta">
+          <div class="work-facts work-facts--split">
+            <span>2023-2026</span>
+            <span>проекты для бигтеха</span>
+            <span>100+ мерча продано</span>
+          </div>
+          <ul class="work-tags">
+            <li>мерч</li>
+            <li>ui/ux</li>
+            <li>брендинг</li>
+            <li>баннеры</li>
+            <li>иллюстрации</li>
+            <li>веб-приложение</li>
+            <li>полиграфия</li>
+          </ul>
+        </div>
+      </a>
+
+      <div class="work-divider"></div>
+
+      <a class="work-row" href="eng-flow.html">
+        <div class="work-info">
+          <span class="work-tag">инфографика для тг канала</span>
+          <h3 class="work-title">eng flow</h3>
+        </div>
+        <div class="work-image work-image--square">
+          <img src="assets/photos/works/eng-flow.jpg" alt="eng flow" />
+        </div>
+        <div class="work-meta">
+          <div class="work-facts">
+            <span>2024-2026</span>
+            <span>80+ постов</span>
+          </div>
+          <ul class="work-tags">
+            <li>ai</li>
+            <li>ретушь</li>
+            <li>инфографика</li>
+            <li>айдентика</li>
+            <li>иллюстрации</li>
+          </ul>
+        </div>
+      </a>
+
+      <div class="work-divider"></div>
+    </section>
+
+    <!-- типы проектов / обо мне / контакты -->
+    <div class="bottom-group">
+      <section id="skills" class="skills">
+        <div class="skills-canvas">
+          <span class="skills-hint">кликни и перетащи</span>
+          <h2 class="skills-title">Типы проектов</h2>
+          <ul class="skills-balls">
+            <li>полиграфия</li>
+            <li>презентации</li>
+            <li>лендинги</li>
+            <li>айдентика</li>
+            <li>3D</li>
+            <li>моушн</li>
+            <li>мерч</li>
+            <li>ai</li>
+            <li>баннеры</li>
+            <li>ui/ux</li>
+            <li>иллюстация</li>
+            <li>инфографика</li>
+            <li>ретушь</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="about" class="about">
+        <div class="section-header">
+          <span class="section-label">обо мне</span>
+          <span class="section-counter">(2)</span>
+        </div>
+        <div class="about-body">
+          <div class="about-text">
+            <p class="about-intro">
+              Меня зовут Лена и я графический/web дизайнер из Питера.
+            </p>
+            <p class="about-bio">
+              уже 4 года делаю графику для сцен, экранов, полиграфии и наружки,
+              придумываю мерч с нуля, создаю лендинги и люблю, когда сто
+              вариантов в итоге складываются в один идеальный :) Работала и в
+              бигтехе, и в стартапе.<br />Когда не дизайню — люблю вкусно
+              поесть, заниматься спортом, гулять и смотреть рилсы))
+            </p>
+          </div>
+          <div class="about-programs">
+            <h4>программы</h4>
+            <div class="about-programs-cols">
+              <ul>
+                <li>Figma</li>
+                <li>Adobe Photoshop</li>
+                <li>Adobe Illustrator</li>
+                <li>Adobe After Effects</li>
+                <li>Adobe InDesign</li>
+                <li>Blender</li>
+                <li>Spline</li>
+              </ul>
+              <ul>
+                <li>Midjourney / nano banana</li>
+                <li>Claude</li>
+                <li>Procreate</li>
+                <li>Tilda</li>
+                <li>Glyphs 3</li>
+                <li>Cinema 4D</li>
+                <li>Lottie</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contacts" class="contacts">
+        <a class="contacts-email" href="mailto:shcherba.elena@icloud.com"
+          >shcherba.elena@icloud.com</a
+        >
+        <nav class="contacts-links">
+          <a href="https://t.me/the_shcherba" target="_blank" rel="noopener"
+            >telegram</a
+          >
+          <a
+            href="https://www.behance.net/the_shcherba"
+            target="_blank"
+            rel="noopener"
+            >behance</a
+          >
+          <a
+            href="https://www.instagram.com/the.shcherba/"
+            target="_blank"
+            rel="noopener"
+            >instagram</a
+          >
+          <span class="contacts-link--pending" title="ждём ссылку от Лены"
+            >linkedin</span
+          >
+        </nav>
+      </footer>
+    </div>
+
+    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
+       визуально на странице) — технический приём, не визуальный. Подробности в
+       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
+       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
+       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
+       иначе они будут рисоваться поверх него при скролле — порядок покраски для
+       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <header class="hero-nav">
+      <a href="#top" class="logo">
+        <img
+          class="logo-text-img"
+          src="assets/figma/logo-text.svg"
+          alt="the.shcherba"
+          width="125"
+          height="24"
+        />
+        <img
+          class="logo-star-img"
+          src="assets/figma/logo-star.svg"
+          alt=""
+          width="31"
+          height="36"
+        />
+      </a>
+      <button type="button" class="nav-menu-toggle" aria-expanded="false">
+        (меню)
+      </button>
+      <nav class="nav-links">
+        <a href="#works">работы</a>
+        <a href="#about">обо мне</a>
+        <a href="#contacts">контакты</a>
+        <a href="#" class="cv-link" target="_blank" rel="noopener">cv</a>
+      </nav>
+    </header>
+
+    <script src="js/vendor/lenis.min.js"></script>
+    <script src="js/smooth-scroll.js"></script>
+    <script src="js/loader.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/cursor.js"></script>
+    <script src="js/skills-balls.js"></script>
+  </body>
+</html>

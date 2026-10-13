@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Young Con 2026 — the.shcherba</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/case.css" />
+  </head>
+  <body>
+    <div class="case-wrap case-wrap--young-con">
+      <div class="case-top">
+        <a href="index.html" class="case-back">
+          <img
+            src="assets/figma/icon-back-wide.svg"
+            alt=""
+            width="47"
+            height="13"
+          />
+          <span>назад</span>
+        </a>
+
+        <div class="case-facts">
+          <div class="case-facts-row case-facts-row--first">
+            <a href="https://yandex.ru/youngcon" target="_blank" rel="noopener"
+              >сайт</a
+            >
+            <a
+              class="case-facts-arrow"
+              href="https://yandex.ru/youngcon"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="assets/figma/icon-arrow-back.svg" alt="" />
+            </a>
+          </div>
+          <div class="case-facts-row">
+            <span>дата</span>
+            <span>май-июнь 2026</span>
+          </div>
+          <div class="case-facts-row">
+            <span>охват</span>
+            <span>10 тыс. участников</span>
+          </div>
+          <div class="case-facts-row case-facts-tags">
+            <span>направления</span>
+            <ul>
+              <li>ai</li>
+              <li>баннеры</li>
+              <li>ретуш</li>
+              <li>ивент-дизайн</li>
+              <li>большой объем</li>
+              <li>видеографика</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="case-title">
+        <span class="case-title-main">Young Con</span>
+        <span class="case-title-year">2026</span>
+      </h1>
+
+      <div class="case-about">
+        <span class="case-about-label">о проекте</span>
+        <p class="case-about-text">
+          Манифест фестиваля в 2026 году строился на мысли «исходный код любой
+          технологии — человек»: увидеть в технологиях не инструмент, а себя.
+        </p>
+      </div>
+
+      <div class="case-canvas case-canvas--young-con">
+        <!-- (1) наружная реклама + главное фото.
+           РАУНД 31: .case-gallery — обёртка для мобильного Figma-макета Young Con (нода 130:10380).
+           На десктопе она display:contents (см. case.css) — исчезает из раскладки, и .case-photo/
+           .case-caption внутри позиционируются абсолютно от .case-canvas как и раньше, один в один
+           со старой версией. На мобильном это настоящий flex-столбец с собственным gap под каждую
+           галерею (цифры — из Dev Mode, у каждой галереи свой зазор между подписью и фото). -->
+        <div class="case-gallery case-gallery--1">
+          <div class="case-caption" style="left: 0%; top: 0%; width: 42.5%">
+            <span class="case-caption-num">(1)</span>
+            <span class="case-caption-text"
+              >Наружная реклама — баннеры и оформление фасадов Live Арены</span
+            >
+          </div>
+          <div
+            class="case-photo"
+            style="left: 0%; top: 2.38%; width: 100%; height: 26.323%"
+          >
+            <img
+              src="assets/photos/young-con/hero.jpg"
+              alt="Live Арена — фасад фестиваля"
+            />
+          </div>
+        </div>
+
+        <!-- (2) экраны сцен — на мобильном 6 фото идут не одно под другим, а тремя парами
+           (см. .case-photo-pair в case.css), порядок пар по Dev Mode: (scene-1+scene-2),
+           (scene-6+scene-3), (scene-4+scene-5) — то есть эко-баннер (scene-6) на мобильном
+           встаёт между scene-2 и scene-3, не в конце списка, как на десктопе. На сам десктоп-
+           коллаж порядок в разметке не влияет (там всё строго по left/top/width/height). -->
+        <div class="case-gallery case-gallery--2">
+          <div
+            class="case-caption"
+            style="left: 20.294%; top: 30.734%; width: 39.118%"
+          >
+            <span class="case-caption-num">(2)</span>
+            <span class="case-caption-text"
+              >Экраны сцен — графика для сцен 5 бизнес-групп: спикерские
+              карточки, инфографика докладов, оформление секций</span
+            >
+          </div>
+          <div class="case-photo-pair">
+            <div
+              class="case-photo"
+              style="
+                left: 0%;
+                top: 34.161%;
+                width: 39.191%;
+                height: 10.332%;
+                flex: 1 0 0;
+                aspect-ratio: 230/150;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-1.jpg"
+                alt="Спикерская карточка на экране сцены"
+              />
+            </div>
+            <div
+              class="case-photo"
+              style="
+                left: 40.662%;
+                top: 34.161%;
+                width: 18.75%;
+                height: 10.332%;
+                flex: 0 0 auto;
+                aspect-ratio: 255/356;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-2.jpg"
+                alt="Баттл вузов — афиша на экране"
+              />
+            </div>
+          </div>
+          <div class="case-photo-pair">
+            <div
+              class="case-photo"
+              style="
+                left: 81.176%;
+                top: 45.072%;
+                width: 18.824%;
+                height: 10.042%;
+                flex: 0 0 auto;
+                aspect-ratio: 66/92;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-6.jpg"
+                alt="Эко-баннер «+1 к защите планеты»"
+              />
+            </div>
+            <div
+              class="case-photo"
+              style="
+                left: 60.882%;
+                top: 34.161%;
+                width: 39.118%;
+                height: 10.332%;
+                flex: 1 0 0;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-3.jpg"
+                alt="Спикерская карточка на экране сцены"
+              />
+            </div>
+          </div>
+          <div class="case-photo-pair">
+            <div
+              class="case-photo"
+              style="
+                left: 0%;
+                top: 45.072%;
+                width: 39.118%;
+                height: 10.042%;
+                flex: 1 0 0;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-4.jpg"
+                alt="Муз-вуз — оформление сцены"
+              />
+            </div>
+            <div
+              class="case-photo"
+              style="
+                left: 40.588%;
+                top: 45.072%;
+                width: 39.118%;
+                height: 10.042%;
+                flex: 0 0 112px;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-5.jpg"
+                alt="Инсталляция Young Con в холле"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- (3) онлайн-трансляции -->
+        <div class="case-gallery case-gallery--3">
+          <div
+            class="case-caption"
+            style="left: 40.588%; top: 57.144%; width: 39.118%"
+          >
+            <span class="case-caption-num">(3)</span>
+            <span class="case-caption-text"
+              >Онлайн-трансляции — графика для прямых эфиров фестиваля</span
+            >
+          </div>
+          <div
+            class="case-photo"
+            style="left: 20.294%; top: 59.82%; width: 59.412%; height: 11.058%"
+          >
+            <img
+              src="assets/photos/young-con/datadojo.png"
+              alt="Оформление онлайн-трансляции Data Dojo"
+            />
+          </div>
+        </div>
+
+        <!-- (4) баннеры хедлайнеров — на мобильном не пара в ряд, а смещённая сетка (широкий
+           портрет слева на всю высоту, пейзажный кадр справа по центру высоты) — см.
+           .case-photo-offset, цифры (151/226, 174/116, зазор 24px) из Dev Mode. -->
+        <div class="case-gallery case-gallery--4">
+          <div
+            class="case-caption"
+            style="left: 0%; top: 72.908%; width: 39.118%"
+          >
+            <span class="case-caption-num">(4)</span>
+            <span class="case-caption-text"
+              >Баннеры хедлайнеров — визуалы для лайнапа: SLAVA MARLOW, TOXI$,
+              Александр Пушной, Тима ищет свет, Сергей Мезенцев, Utopia
+              Show</span
+            >
+          </div>
+          <div class="case-photo-offset">
+            <div
+              class="case-photo"
+              style="
+                left: 10.147%;
+                top: 76.796%;
+                width: 28.971%;
+                height: 17.152%;
+                flex: 0 0 151px;
+                aspect-ratio: 151/226;
+              "
+            >
+              <img
+                src="assets/photos/young-con/poster.jpg"
+                alt="Афиши хедлайнеров на улице"
+              />
+            </div>
+            <div
+              class="case-photo"
+              style="
+                left: 50.735%;
+                top: 80.221%;
+                width: 39.118%;
+                height: 10.303%;
+                flex: 1 0 0;
+                aspect-ratio: 174/116;
+              "
+            >
+              <img
+                src="assets/photos/young-con/scene-7.jpg"
+                alt="Экран с именами хедлайнеров"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-outro-note">
+        <p class="case-outro-text case-outro-text--young-con">
+          Я приняла участие в разработке Young Con и за несколько месяцев было
+          создано больше 120 баннеров и графических айтемов для 5 сцен
+          бизнес-групп, хедлайнеров, прямых эфиров и наружной рекламы Live
+          Арены, которые на протяжении всего феста читались как единая
+          айдентика, а не набор разных мероприятий. Материалы производились
+          ежедневно, что потребовало гибкости, оперативного реагирования на
+          изменения тз и внесения правок, а также устойчивости к работе в режиме
+          высокой интенсивности и многозадачности на протяжении длительного
+          периода.
+        </p>
+        <a href="#top" aria-label="наверх">
+          <img class="case-totop" src="assets/figma/icon-totop.svg" alt="" />
+        </a>
+      </div>
+    </div>
+
+    <div class="case-footer-wrap">
+      <div
+        class="bg-black"
+        style="height: 1px; background: #000; width: 100%"
+      ></div>
+      <footer id="contacts" class="contacts">
+        <a class="contacts-email" href="mailto:shcherba.elena@icloud.com"
+          >shcherba.elena@icloud.com</a
+        >
+        <nav class="contacts-links">
+          <a href="https://t.me/the_shcherba" target="_blank" rel="noopener"
+            >telegram</a
+          >
+          <a
+            href="https://www.behance.net/the_shcherba"
+            target="_blank"
+            rel="noopener"
+            >behance</a
+          >
+          <a
+            href="https://www.instagram.com/the.shcherba/"
+            target="_blank"
+            rel="noopener"
+            >instagram</a
+          >
+          <span class="contacts-link--pending" title="ждём ссылку от Лены"
+            >linkedin</span
+          >
+        </nav>
+      </footer>
+    </div>
+
+    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
+       визуально на странице) — технический приём, не визуальный. Подробности в
+       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
+       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
+       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
+       иначе они будут рисоваться поверх него при скролле — порядок покраски для
+       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <header class="hero-nav">
+      <a href="index.html#top" class="logo">
+        <img
+          class="logo-text-img"
+          src="assets/figma/logo-text.svg"
+          alt="the.shcherba"
+          width="125"
+          height="24"
+        />
+        <img
+          class="logo-star-img"
+          src="assets/figma/logo-star.svg"
+          alt=""
+          width="31"
+          height="36"
+        />
+      </a>
+      <button type="button" class="nav-menu-toggle" aria-expanded="false">
+        (меню)
+      </button>
+      <nav class="nav-links">
+        <a href="index.html#works">работы</a>
+        <a href="index.html#about">обо мне</a>
+        <a href="index.html#contacts">контакты</a>
+        <a href="#" class="cv-link" target="_blank" rel="noopener">cv</a>
+      </nav>
+    </header>
+
+    <script src="js/vendor/lenis.min.js"></script>
+    <script src="js/smooth-scroll.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/cursor.js"></script>
+    <script src="js/case-cards.js"></script>
+  </body>
+</html>

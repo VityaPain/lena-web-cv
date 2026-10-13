@@ -1,0 +1,52 @@
+/* GT America Mono — навигация, мелкий текст (Trial — купить лицензию перед публикацией) */
+@font-face {
+  font-family: "GT America Mono";
+  src: url("../fonts/gt-america-mono/GT-America-Mono-Light-Trial.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GT America Mono";
+  src: url("../fonts/gt-america-mono/GT-America-Mono-Regular-Trial.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Panama — крупный заголовок первого экрана */
+@font-face {
+  font-family: "Panama";
+  src: url("../fonts/panama/Panama-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* PP Editorial New Ultralight Italic — для логотипа (сейчас лого подключено как SVG-картинка, шрифт оставлен про запас) */
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("../fonts/pp-editorial-new/PPEditorialNew-UltralightItalic-BF644b214ff1e9b.otf") format("opentype");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* PP Editorial New Ultralight (прямой) — цифры в заголовках карточек работ */
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("../fonts/pp-editorial-new/PPEditorialNew-Ultralight-BF644b21500d0c0.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Neue Haas Grotesk Display Pro — заголовки секций ("работы", "обо мне") и вступительный текст блока "обо мне" */
+/* РАУНД 11: Лена прислала Medium (65) взамен Roman (55) — используем Medium везде, где подключен этот шрифт */
+@font-face {
+  font-family: "Neue Haas Grotesk Display Pro";
+  src: url("../fonts/neue-haas/Neue-Haas-Grotesk-Display-Pro-65-Medium.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

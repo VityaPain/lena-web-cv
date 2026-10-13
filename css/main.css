@@ -1,0 +1,1404 @@
+/* ===== reset / base ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "GT America Mono", monospace;
+  color: #000;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 clamp(20px, 2.78vw, 40px); /* 40px at 1440 canvas width */
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  margin: 0;
+  font-weight: normal;
+}
+
+/* РАУНД 29: визуально скрытый, но доступный для скринридеров текст — нужен там, где одно и то
+   же содержимое показано визуально по-разному на десктопе и мобильном (см. .hero-headline:
+   десктопная и мобильная версии заголовка — это две разные "нарезки" на строки одного и того же
+   текста через чистый CSS display:none/block, обе помечены aria-hidden, поэтому самому тексту
+   нужен один-единственный настоящий источник для accessibility — этот класс). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== фон с нойзом (референс chriskalafatis.com, см. js/background.js) ===== */
+#bg-canvas {
+  position: fixed;
+  top: -5vh;
+  left: -5vw;
+  width: 110vw;
+  height: 110vh;
+  z-index: -1;
+  pointer-events: none;
+  /* было 60px. Блюр — это фильтр нижних частот: он усредняет соседние пиксели, а значит стирает
+     ЛЮБОЕ мелкое зерно (оно меняется через пиксель — самая высокая "частота" из возможных) даже
+     при небольшом радиусе блюра, задолго до того как начинает заметно сглаживать сам силуэт пятна.
+     Поэтому блюр тут больше не используется вообще — мягкий край даёт сам шейдер (smoothstep
+     внутри blob()), а зерно (js/background.js) остаётся видимым как и должно */
+  filter: none;
+}
+
+/* ===== кастомный курсор (референс klyuse.com, см. js/cursor.js) ===== */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.cursor.is-visible {
+  opacity: 1;
+}
+
+.cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-accent, #36a9e2);
+  border: 0px solid var(--color-accent, #36a9e2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+    height 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+    background-color 0.3s ease,
+    border-width 0.3s ease;
+}
+
+.cursor.is-hover .cursor-dot {
+  width: 80px;
+  height: 80px;
+  background: rgba(54, 169, 226, 0.16);
+  border: 1px solid var(--color-accent, #36a9e2);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ===== экран загрузки (РАУНД 36, Figma нода 217:10764 — "MacBook Air - 1") =====
+   Показывается при каждом открытии страницы: гифка кота по центру, "Loading..." под ней.
+   В Figma-макете (кадр 1280×832) центр группы "кот+текст" чуть выше геометрического центра
+   экрана (175px до верха кота + 274 высота + 31 зазор + 12 текста = группа 175-492px, её
+   центр 333.5px — это 40% высоты кадра, не 50%), поэтому вместо чистого justify-content:center
+   у .loading-screen-inner есть небольшой отрицательный margin-top (в vh, т.к. это оверлей на
+   весь экран — в отличие от остальной вёрстки сайта с её max-width:1360px контейнером, тут
+   позиционирование от viewport, не от контента). z-index выше, чем у курсора (9999, см. выше) —
+   оверлей должен перекрывать вообще всё, включая кастомный курсор. */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.loading-screen.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-screen-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 31px;
+  margin-top: clamp(-80px, -10vh, 0px);
+}
+
+.loading-screen-gif {
+  width: clamp(120px, 21vw, 274px);
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.loading-screen-text {
+  margin: 0;
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #000;
+  white-space: nowrap;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen {
+    transition: none;
+  }
+}
+
+/* ===== первый экран ===== */
+.hero {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 19px;
+  /* РАУНД 28: .hero-nav снова ушёл из потока (position:absolute) — нужен position:relative
+     здесь, чтобы он позиционировался относительно .hero (центрированной колонки 1360px),
+     а не относительно viewport/body. padding-top компенсирует место, которое раньше занимал
+     хедер в потоке (его высоту, var(--nav-h), меряет js/nav.js) + прежний gap 19px до него. */
+  position: relative;
+  padding-top: calc(var(--nav-h, 110px) + 19px);
+
+  height: calc(100vh - 40px);
+}
+
+/* --- хедер ---
+   РАУНД 19: маска-инверсия/scramble/подчёркивание/прилипание-скрытие при скролле были убраны
+   по просьбе Лены — хедер вернулся в обычный статичный поток.
+   РАУНД 27: Лена попросила вернуть анимацию хедера как на chriskalafatis.com — маску-инверсию
+   на буквах, подчёркивание при наведении, смену символов на 4 пунктах меню, плавную анимацию.
+   Тогда НЕ трогали position хедера (оставался в обычном потоке, position:static) — именно
+   смена position (fixed в РАУНДЕ 16, затем absolute+scroll-sync в РАУНДЕ 17-18) была причиной
+   почти всех багов с маской в прошлых раундах (у position:fixed/absolute со своим stacking
+   context mix-blend-mode видит только контент внутри этого контекста, не реальный фон страницы
+   позади) — тогда это не просили, поэтому не добавляли.
+   РАУНД 28: Лена явно попросила именно это — "при прокрутке вниз пропадает вверх появляется
+   мягко", как на chriskalafatis.com. Возвращаем position:absolute, но теперь зная уроки
+   прошлых раундов плюс НОВУЮ находку этого раунда (проверено отдельным минимальным тестом в
+   Playwright, не на глаз):
+
+   (1) РАУНД 17 — position:fixed ломает mix-blend-mode кросс-контентный блендинг (изолированный
+   stacking context), а position:absolute без СВОЕГО z-index — нет; поэтому "прилипание" к верху
+   экрана при скролле делается не через fixed, а через JS, который на каждый кадр выставляет
+   nav.style.top = window.scrollY (см. js/nav.js) — визуально неотличимо от fixed, но блендинг
+   остаётся настоящим.
+
+   (2) РАУНД 18 — анимация через CSS `transform` на элементе с position:fixed/absolute может
+   спровоцировать браузер поднять его в отдельный GPU-слой композитинга даже в состоянии покоя —
+   это тоже ломает mix-blend-mode на реальных устройствах. Поэтому анимация скрытия/появления
+   идёт через `margin-top` (layout-свойство), а не через transform.
+
+   (3) НОВОЕ, РАУНД 28 — САМ `z-index` (с любым числовым значением, не `auto`) на позиционированном
+   элементе создаёт для него изолированную группу блендинга точно так же, как position:fixed —
+   mix-blend-mode внутри такой группы видит только то, что нарисовано ВНУТРИ самого .hero-nav
+   (например звёздочку рядом с текстом), а не реальный контент страницы позади хедера. Раньше
+   (РАУНДЫ 16-18) на хедере стоял `z-index:100` — похоже, кросс-контентный блендинг тогда работал
+   не до конца корректно, просто это не было поймано отдельным тестом. Проверено минимальным
+   изолированным примером (прямоугольник с mix-blend-mode:difference текстом на градиентном фоне):
+   без z-index — текст корректно меняет цвет под градиентом; с любым z-index (включая 100) —
+   текст остаётся сплошным белым, блендинга нет. Поэтому здесь z-index у `.hero-nav` НЕТ вообще —
+   чтобы он всё равно гарантированно рисовался поверх других секций со своим z-index
+   (`.skills-canvas`/`.case-canvas`, им z-index:0 нужен по отдельной причине — см. комментарий
+   там), сам `<header class="hero-nav">` в разметке каждой страницы перенесён в самый конец
+   `<body>` (после всех остальных секций) — для position:absolute элементов без z-index порядок
+   прорисовки среди "конкурентов" на той же позиции решает порядок в DOM, а не позиция на экране
+   (которая всё равно управляется через top/margin-top, а не через место в разметке). */
+.hero-nav {
+  /* хедер позиционируется от окна (position:absolute, body не relative), а не от колонки
+     контента — поэтому вычитаем боковые отступы body (та же clamp, что у body выше), иначе
+     на узких экранах (где 1360px не ограничивает) он прилипал к краям экрана */
+  width: calc(100% - 2 * clamp(20px, 2.78vw, 40px));
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: clamp(20px, 2.6vw, 32px) 0px clamp(14px, 1.8vw, 22px);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 0;
+  transition: margin-top 0.4s ease;
+}
+
+/* скрытое состояние — выезжает вверх за пределы экрана (margin-top отрицательный, см. комментарий
+   выше про то, почему margin-top, а не transform). На самом верху страницы хедер всегда виден
+   (см. логику в js/nav.js) — сразу после загрузки класс не навешивается. */
+.hero-nav.nav-hidden {
+  margin-top: calc(var(--nav-h, 110px) * -1.3);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* mix-blend-mode:difference против белого текста и filter:invert(1) против чёрного SVG-лого —
+   та же пара приёмов, что уже проверялась в РАУНДАХ 16/18: инверсия должна быть именно на
+   буквах (текст лого + пункты меню), звёздочка (.logo-star-img) её сознательно не получает,
+   как и просила Лена в РАУНДЕ 18 ("маска инвертирующая... только на буквах"). */
+.logo-text-img {
+  display: block;
+  width: 125px;
+  height: 24px;
+  mix-blend-mode: difference;
+  filter: invert(1);
+}
+
+.logo-star-img {
+  display: block;
+  width: 31px;
+  height: 36px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 42px);
+}
+
+.nav-links a {
+  position: relative;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+/* подчёркивание при наведении — тонкая линия, выезжает слева направо.
+   Тоже mix-blend-mode:difference + белый фон, как и сам текст, чтобы линия вела себя так же
+   (видна на любом фоне позади хедера, не только на белом). */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: #fff;
+  mix-blend-mode: difference;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Safari / любой браузер на iOS (движок WebKit): маска-инверсия хедера там не работает.
+   Проверено тестовыми страницами в Safari: ломает её WebGL-фон #bg-canvas (с ним — текст
+   не виден, без него — виден; прилипание хедера через top в js/nav.js ни при чём). Плюс
+   WebKit не смешивает с фоном самого body/холста страницы — только с обычными блоками.
+   mix-blend-mode в WebKit видит только то, что в одном слое композитинга с хедером, а
+   анимированный канвас всегда в своём слое. Поэтому в WebKit — запасной вариант: обычный
+   чёрный текст и чёрное лого без блендинга, всегда (по решению Лены — без переключения цвета
+   над фото). Класс .is-webkit на <html> ставит js/nav.js. */
+html.is-webkit .logo-text-img {
+  mix-blend-mode: normal;
+  filter: none; /* исходный SVG лого чёрный — invert(1) делал его белым для difference */
+}
+
+html.is-webkit .nav-links a,
+html.is-webkit .nav-links a::after,
+html.is-webkit .nav-menu-toggle {
+  mix-blend-mode: normal;
+}
+
+html.is-webkit .nav-links a,
+html.is-webkit .nav-menu-toggle {
+  color: #000;
+}
+
+html.is-webkit .nav-links a::after {
+  background: #000;
+}
+
+/* РАУНД 29: кнопка "(меню)" — показывается только на узких экранах (см. @media max-width:480px),
+   раскрывает/прячет .nav-links. На десктопе/планшете её просто не видно и она не участвует в
+   layout (display:none), поэтому justify-content:space-between у .hero-nav её не замечает. */
+.nav-menu-toggle {
+  display: none;
+}
+
+/* --- заголовок --- */
+.hero-headline {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 44vw, 599px);
+}
+
+.hero-star {
+  position: absolute;
+  left: 11.8%;
+  top: 41.4%;
+  width: 21px;
+  height: 21px;
+}
+
+/* РАУНД 29: настоящий <h1> теперь просто .sr-only (один источник текста для скринридеров —
+   см. комментарий у .sr-only в начале файла), сама видимая вёрстка — в .hero-lines--desktop /
+   .hero-lines--mobile ниже (обе aria-hidden, переключаются через display:none/block по
+   медиа-запросу, см. @media (max-width: 480px) в конце файла). */
+.hero-lines--mobile {
+  display: none;
+}
+
+.hero-line {
+  position: absolute;
+  display: block;
+  font-family: "Panama", serif;
+  font-size: clamp(30px, 5.88vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.0695em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #000;
+  transform: translateY(-50%);
+}
+
+.hero-line:nth-of-type(1) {
+  left: 14.49%;
+  right: 17.72%;
+  top: 43.24%;
+}
+
+.hero-line:nth-of-type(2) {
+  left: 25.59%;
+  right: 14.49%;
+  top: 56.59%;
+}
+
+.hero-line:nth-of-type(3) {
+  left: 18.31%;
+  right: 20.37%;
+  top: 69.95%;
+}
+
+.hero-accent {
+  position: absolute;
+  right: 9.3%;
+  top: 69.45%;
+  transform: translateY(-50%);
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #36a9e2;
+}
+
+.hero-accent-smiley {
+  text-transform: none;
+}
+
+/* --- низ первого экрана --- */
+.hero-bottom {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.hero-greeting {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.hero-photo {
+  width: 125px;
+  height: 142px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-greeting-text {
+  margin: 0;
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #000;
+}
+.hero-greeting-text-comma {
+  letter-spacing: -0.0822em;
+}
+
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: right;
+  color: #000;
+  white-space: nowrap;
+}
+
+/* ===== общий ритм секций ===== */
+:root {
+  --gap-section: clamp(40px, 5.56vw, 80px); /* 80px на холсте 1440 */
+  --gap-sub: clamp(
+    28px,
+    4.17vw,
+    60px
+  ); /* 60px между типы проектов / обо мне / контакты */
+  --color-tag: #2a9fff; /* категория-тег у карточек работ */
+  --color-accent: #36a9e2; /* акцентный голубой (hero, фон) */
+}
+
+.works,
+.bottom-group {
+  max-width: 1360px;
+  margin: var(--gap-section) auto 0;
+}
+
+/* --- переиспользуемый заголовок секции ("работы (1)", "обо мне (2)") --- */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 0;
+  border-bottom: 1px solid #000;
+  text-transform: uppercase;
+}
+
+.section-label {
+  font-family: "Neue Haas Grotesk Display Pro", sans-serif;
+  font-size: 19px;
+  line-height: 19px;
+}
+
+.section-counter {
+  font-family: "GT America Mono", monospace;
+  font-size: 19px;
+  line-height: 19px;
+  letter-spacing: -0.0882em;
+}
+
+/* ===== работы ===== */
+.works {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.work-divider {
+  height: 1px;
+  background: #000;
+  width: 100%;
+}
+
+.work-row {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.work-info {
+  flex: 0 0 39.12%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.work-tag {
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--color-tag);
+}
+
+.work-title {
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(8px, 1.25vw, 17px);
+  font-family: "Panama", serif;
+  font-weight: normal;
+  font-size: clamp(28px, 4.27vw, 58px);
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: #000;
+}
+
+.work-number {
+  font-family: "PP Editorial New", serif;
+  font-weight: 200;
+  font-size: clamp(24px, 3.82vw, 52px);
+  letter-spacing: -0.04em;
+}
+
+.work-image {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.work-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.work-image--wide {
+  flex-basis: 33.38%;
+  aspect-ratio: 454 / 315;
+}
+
+.work-image--square {
+  flex-basis: 23.16%;
+  aspect-ratio: 1 / 1;
+}
+
+.work-meta {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-align: right;
+  text-transform: uppercase;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.work-facts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.work-tags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* ===== типы проектов (шарики, статично — без физики, добавим позже) ===== */
+.bottom-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.skills-canvas {
+  position: relative;
+  /* z-index:0 (а не auto) — создаёт свой локальный stacking context, чтобы z-index у шариков/
+     подсказки внутри (ниже) не "утекал" на уровень всей страницы */
+  z-index: 0;
+  width: 100%;
+  aspect-ratio: 1360 / 682;
+  border: 1px solid #000;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+.skills-hint,
+.skills-title {
+  position: absolute;
+  left: 50%;
+  text-align: center;
+  white-space: nowrap;
+  color: #000;
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* подсказка — на 10px над заголовком (было отдельно, top: 50% − 7.5vw, и зазор плавал от
+   ширины). Заголовок центрирован по 50% с line-height:1, поэтому его верх = 50% − половина
+   font-size (та же clamp, что у .skills-title ниже); translateY(-100%) ставит низ подсказки
+   на эту линию минус 3px. Не 10: у подсказки под буквами ещё место строки, а заглавные
+   Panama начинаются ниже верха строки — видимый зазор между самими буквами выходит ~10px.
+   Мобильный (≤480) переопределяет top/transform отдельно. */
+.skills-hint {
+  top: calc(50% - clamp(26px, 4.27vw, 58px) / 2 - 3px);
+  transform: translate(-50%, -100%);
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+}
+
+.skills-title {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-family: "Panama", serif;
+  font-weight: normal;
+  font-size: clamp(26px, 4.27vw, 58px);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.skills-balls {
+  position: absolute;
+  inset: 0;
+}
+
+.skills-balls li {
+  position: absolute;
+  aspect-ratio: 1 / 1;
+  width: 11.03%;
+  border: 1px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 12px;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.skills-balls li:nth-child(1) {
+  left: 77.87%;
+  top: 0.51%;
+}
+.skills-balls li:nth-child(2) {
+  left: 59.41%;
+  top: 11.14%;
+}
+.skills-balls li:nth-child(3) {
+  left: 43.9%;
+  top: 8.8%;
+}
+.skills-balls li:nth-child(4) {
+  left: 15.37%;
+  top: 12.9%;
+}
+.skills-balls li:nth-child(5) {
+  left: 30%;
+  top: 23.02%;
+}
+.skills-balls li:nth-child(6) {
+  left: 30%;
+  top: 48.24%;
+}
+.skills-balls li:nth-child(7) {
+  left: 18.46%;
+  top: 48.24%;
+}
+.skills-balls li:nth-child(8) {
+  left: 18.46%;
+  top: 77.57%;
+}
+.skills-balls li:nth-child(9) {
+  left: 31.47%;
+  top: 77.57%;
+}
+.skills-balls li:nth-child(10) {
+  left: 48.16%;
+  top: 77.57%;
+}
+.skills-balls li:nth-child(11) {
+  left: 61.18%;
+  top: 77.57%;
+}
+.skills-balls li:nth-child(12) {
+  left: 77.87%;
+  top: 77.57%;
+}
+.skills-balls li:nth-child(13) {
+  left: 64.93%;
+  top: 48.24%;
+}
+
+/* на десктопе js/skills-balls.js заменяет статичный список на физику-канвас */
+.skills-balls--hidden {
+  display: none;
+}
+
+.skills-physics-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  touch-action: none;
+}
+
+/* ===== обо мне ===== */
+.about {
+  margin-top: var(--gap-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.about-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.about-text {
+  flex: 0 0 39.1%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: justify;
+  text-transform: uppercase;
+}
+
+.about-intro {
+  margin: 0;
+  font-family: "Neue Haas Grotesk Display Pro", sans-serif;
+  font-size: 19px;
+  line-height: 21px;
+}
+
+.about-bio {
+  margin: 0;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.about-programs {
+  flex: 0 0 39.1%;
+  min-width: 260px;
+}
+
+.about-programs h4 {
+  margin: 0 0 12px;
+  font-family: "Neue Haas Grotesk Display Pro", sans-serif;
+  font-weight: normal;
+  font-size: 19px;
+  text-transform: uppercase;
+}
+
+.about-programs-cols {
+  display: flex;
+  gap: 20px;
+}
+
+.about-programs-cols ul {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+/* ===== контакты / футер ===== */
+.contacts {
+  margin-top: var(--gap-sub);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-bottom: var(--gap-section);
+}
+
+.contacts-email {
+  font-family: "Panama", serif;
+  font-size: clamp(28px, 4.27vw, 58px);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.contacts-links {
+  flex: 0 0 39.1%;
+  min-width: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.contacts-link--pending {
+  color: #000;
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* десктоп: от футера до конца страницы — тот же отступ, что у хедера сверху (верхний padding
+   .hero-nav: clamp(20px, 2.6vw, 32px), т.е. 32px на обычной ширине десктопа). На мобильных
+   ширинах (≤860) — свои 24px, см. .contacts в @media (max-width: 860px) ниже. */
+@media (min-width: 861px) {
+  .contacts {
+    padding-bottom: clamp(20px, 2.6vw, 32px);
+    /* соцсети — на одной линии с буквами почты (по базовой линии), а не с низом блока:
+       низ блока почты задаёт "@", который уходит ниже строки, и ссылки из-за него
+       опускались ниже букв */
+    align-items: baseline;
+  }
+}
+
+/* ===== mobile fallback (без макета в Figma — своя адаптация) ===== */
+@media (max-width: 860px) {
+  .hero-nav {
+    flex-wrap: wrap;
+    row-gap: 16px;
+  }
+  .nav-links {
+    gap: 20px;
+  }
+
+  .hero-headline {
+    height: auto;
+    padding: 48px 0 24px;
+  }
+  .hero-star {
+    display: none;
+  }
+  .hero-line {
+    position: static;
+    display: block;
+    transform: none;
+    font-size: clamp(28px, 9vw, 40px);
+    white-space: normal;
+  }
+  .hero-accent {
+    position: static;
+    display: block;
+    transform: none;
+    text-align: left;
+    margin-top: 12px;
+  }
+
+  .hero-bottom {
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .hero-stats {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* --- работы --- */
+  .work-row {
+    flex-wrap: wrap;
+  }
+  .work-info {
+    flex: 1 1 100%;
+    order: 1;
+    gap: 12px;
+  }
+  .work-image {
+    order: 2;
+    flex: 1 1 100%;
+  }
+  .work-image--wide,
+  .work-image--square {
+    flex-basis: 100%;
+  }
+  .work-meta {
+    order: 3;
+    flex: 1 1 100%;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 12px;
+  }
+  .work-facts,
+  .work-tags {
+    align-items: flex-start;
+  }
+
+  /* --- типы проектов ---
+     РАУНД 29: раньше тут на узком экране физика шариков полностью отключалась (js/skills-balls.js
+     возвращался из isDesktop()-проверки) и вместо холста показывался плоский список тегов-пилюль.
+     Лена явно попросила ("блок с шариками должен быть такой же анимированный как в декстопной
+     версии") — физика теперь работает на любой ширине (js больше не делает ранний return), холст
+     остаётся тем же бордер-блоком со скруглением, что и на десктопе (без переопределений здесь).
+     Точная подгонка размера шариков/заголовка под Figma-макет "Главная — мобильная" — в
+     @media (max-width: 480px) в конце файла. */
+
+  /* --- обо мне --- */
+  .about-body {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .about-text,
+  .about-programs {
+    flex-basis: 100%;
+    text-align: left;
+  }
+
+  /* --- контакты --- */
+  .contacts {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 24px; /* от футера до конца страницы на мобильном */
+  }
+  .contacts-links {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ===== РАУНД 29: точный мобильный макет главной страницы по Figma ("Главная — мобильная",
+   нода 114:7704, холст 390px) =====
+   Отдельная, более узкая точка перелома (480px, а не общие 860px выше) — макет в Figma нарисован
+   именно под телефон, не под планшет; на ширинах 480-860 (планшет) остаётся обычная упрощённая
+   адаптация из блока выше. Цифры позиционирования (left/top у строк заголовка, отступы у фото
+   и т.д.) сняты из Figma Dev Mode для холста 390px с отступами по бокам 20px (контентная зона
+   ~350px — то же число, что и в самой Figma-ноде "Знакомство"/"Обо мне", см. их width:350px). */
+@media (max-width: 480px) {
+  /* --- заголовок первого экрана: своя, не десктопная, разбивка на строки (см. .hero-lines--mobile
+     и комментарий у .sr-only в начале файла — почему текст продублирован на уровне разметки) --- */
+  /* первый экран — ровно на высоту экрана телефона: заголовок по центру свободного места
+     между хедером и нижним блоком (margin: auto по вертикали), блок с фото и цифрами
+     прижат к низу. svh — высота с учётом панелей браузера (на iPhone 100vh больше видимой
+     области, и нижний блок уезжал бы под адресную строку); 100vh — запасной вариант для
+     старых браузеров. Снизу 20px — тот же отступ, что по бокам. */
+  .hero {
+    height: 100vh;
+    height: 100svh;
+    padding-bottom: 20px;
+    gap: 0;
+  }
+  .hero-headline {
+    height: auto;
+    padding: 0;
+    margin: auto 0;
+  }
+
+  .hero-lines--desktop {
+    display: none;
+  }
+
+  .hero-lines--mobile {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 210px;
+  }
+
+  .hero-line-m {
+    position: absolute;
+    display: block;
+    white-space: nowrap;
+    font-family: "Panama", serif;
+    font-weight: normal;
+    font-size: 40px;
+    line-height: 1;
+    letter-spacing: -0.0695em;
+    text-transform: uppercase;
+    color: #000;
+  }
+  .hero-line-m:nth-of-type(1) {
+    left: 45px;
+    top: 0;
+  }
+  .hero-line-m:nth-of-type(2) {
+    left: 0;
+    top: 43px;
+  }
+  .hero-line-m:nth-of-type(3) {
+    left: 107px;
+    top: 83px;
+  }
+  .hero-line-m:nth-of-type(4) {
+    left: 14px;
+    top: 123px;
+  }
+  .hero-line-m:nth-of-type(5) {
+    left: 101px;
+    top: 163px;
+  }
+
+  .hero-star {
+    display: block;
+    position: absolute;
+    left: 11px;
+    top: 9px;
+    width: 22px;
+    height: 21px;
+  }
+
+  .hero-accent {
+    display: block;
+    position: absolute;
+    left: auto;
+    right: 10px; /* не впритык к краю — проверено по Dev Mode: правый край текста на x=340 из 350 */
+    top: 175px;
+    transform: none;
+    margin-top: 0;
+    text-align: right;
+    font-size: 12px;
+  }
+
+  /* --- знакомство: фото+подпись слева, статы справа, в один ряд (без переноса), фото меньше
+     (88x100 вместо десктопных 125x142 — см. Figma-ноду "Знакомство") --- */
+  .hero-bottom {
+    flex-wrap: nowrap;
+  }
+  .hero-greeting {
+    gap: 10px;
+  }
+  .hero-photo {
+    width: 88px;
+    height: 100px;
+  }
+  .hero-greeting-text {
+    font-size: 12px;
+  }
+  .hero-stats {
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  /* --- типы проектов: тот же физический холст, что на десктопе (см. комментарий выше), только
+     пропорции под Figma-ноду "Типы проектов" (холст 350x650, кружки меньше скруглены по углам
+     самого блока — 24px вместо 40px). Хинт+заголовок на десктопе каждый центрируется САМ по себе
+     (translate(-50%,-50%)) — на мобильном это не совпадает с Dev Mode: там это единый блок
+     (хинт + заголовок, gap 8px) центрированный КАК ЦЕЛОЕ в холсте 350x650, а не каждая строка
+     по отдельности — поэтому top у обеих взят напрямую из Dev Mode (% от высоты холста 650px,
+     bordered-box с aspect-ratio держит пропорцию, так что % тут надёжны), а не от 50%. */
+  .skills-canvas {
+    aspect-ratio: 350 / 650;
+    border-radius: 24px;
+  }
+  .skills-hint {
+    top: 46.02%;
+    transform: translateX(-50%);
+    font-size: 12px;
+  }
+  .skills-title {
+    top: 49.71%;
+    transform: translateX(-50%);
+    font-size: 40px;
+  }
+
+  /* --- хедер: логотип + кнопка "(меню)" вместо всегда видимых 4 ссылок (см. Figma-ноду "Хедер"
+     мобильной версии). Ссылки открываются в полноэкранном слое .mobile-menu (ниже, после
+     этого медиа-блока; создаёт его js/nav.js), сама .nav-links в хедере на мобильном скрыта. */
+  .nav-links {
+    display: none;
+  }
+  .nav-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: "GT America Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #fff;
+    mix-blend-mode: difference;
+  }
+
+  /* --- работы: по Dev Mode мобильная карточка проще десктопной — тег, заголовок, обложка,
+     ОДНА строка дат/цифр (без строки тегов-категорий вообще, её нет в мобильной ноде ни у одного
+     из 4 кейсов) --- */
+  .work-tags {
+    display: none;
+  }
+  /* название кейса слева, тег-категория справа в одну строку (по просьбе Лены — было тег
+     над заголовком). align-items:baseline — шрифты разного размера (Panama 28px и моно 12px),
+     так нижний край букв у обоих на одной линии. gap — минимальный зазор, если название
+     длинное; обычно между ними свободное место от space-between. */
+  .work-info {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .work-info .work-title {
+    order: 1;
+    font-size: 40px;
+  }
+  /* "2026" у Young Con — в той же пропорции к названию, что и на десктопе (52 к 58) */
+  .work-info .work-number {
+    font-size: 36px;
+  }
+  .work-info .work-tag {
+    order: 2;
+    text-align: right;
+  }
+  .work-meta {
+    margin-top: 0;
+  } /* было +12px поверх gap:20px у .work-row — в сумме получалось 32px вместо 20 */
+  .work-facts {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+  /* Thothex: три факта в одну строку не помещаются — дата слева, остальные два справа
+     столбиком друг под другом (зазор 4px, как у .hero-stats на мобильном). Только эта
+     карточка (класс в index.html), у остальных фактов по два — им хватает ряда выше. */
+  .work-facts--split {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    column-gap: 16px;
+    row-gap: 4px;
+  }
+  .work-facts--split > :first-child {
+    grid-row: 1 / span 2;
+  }
+  .work-facts--split > :not(:first-child) {
+    grid-column: 2;
+    text-align: right;
+  }
+  /* отступ сверху у каждой карточки (раньше — только у первой, после "Работы (1)") —
+     вместе с gap:20px у .works даёт 40px от заголовка/разделителя до карточки */
+  .work-row {
+    margin-top: 20px;
+  }
+
+  /* --- обо мне: Dev Mode даёт два разных зазора там, где раньше стоял один и тот же (32px) —
+     между заголовком секции и блоком текста/программ 32px, а ВНУТРИ этого блока (текст → программы)
+     20px, а не наоборот */
+  .about {
+    gap: 32px;
+  }
+  .about-body {
+    gap: 20px;
+  }
+  .about-programs-cols {
+    gap: 32px;
+  } /* 142 + 32 + 176 = 350 — ровно по ширине контента, не 20px */
+
+  /* --- контакты: в Dev Mode строка ссылок идёт НАД почтой (а не под ней, как в текущей разметке
+     десктопа) — переставляем через flex order, без правки HTML; почта крупнее (32px), зазор
+     между строкой ссылок и почтой — 10px */
+  .contacts {
+    gap: 10px;
+  }
+  .contacts-email {
+    order: 2;
+    font-size: 32px;
+  }
+  .contacts-links {
+    order: 1;
+    /* .contacts — колоночный flex (см. адаптацию выше), а align-items там flex-start, то есть
+       по кросс-оси (тут это ширина) дети не растягиваются, а сжимаются по контенту — без
+       align-self:stretch justify-content:space-between ниже просто нечего распределять
+       (контейнер = сумме ширин ссылок, без лишнего места) */
+    align-self: stretch;
+    flex-basis: auto;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+}
+
+/* ===== мобильное меню — полноэкранный слой поверх всего (создаёт js/nav.js по кнопке
+   "(меню)"). Раскладка по макету (Figma, "iPhone 16 - 1"): белый фон, сверху лого +
+   "(закрыть)" (как хедер), по центру 4 ссылки, внизу соцсети и почта (как мобильный футер).
+   Появление: круг "выплывает" из центра кнопки (правый верхний угол) и растёт до самого
+   дальнего угла экрана — clip-path: circle(). Точку и радиус (--menu-x/-y/-r) выставляет
+   скрипт перед открытием. z-index выше курсора (9999), но ниже экрана загрузки (100000).
+   Закрытый слой — круг нулевого радиуса + visibility:hidden (с задержкой на время анимации
+   закрытия, чтобы круг успел "схлопнуться" обратно в кнопку). */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 24px; /* низ — 24px, как у мобильного футера */
+  background: #fff;
+  color: #000;
+  clip-path: circle(0px at var(--menu-x, 100%) var(--menu-y, 0%));
+  visibility: hidden;
+  transition:
+    clip-path 0.7s cubic-bezier(0.65, 0, 0.35, 1),
+    visibility 0s linear 0.7s;
+}
+
+.mobile-menu.is-open {
+  clip-path: circle(var(--menu-r, 150vmax) at var(--menu-x, 100%) var(--menu-y, 0%));
+  visibility: visible;
+  transition:
+    clip-path 0.7s cubic-bezier(0.65, 0, 0.35, 1),
+    visibility 0s;
+}
+
+/* --- верх: те же отступы и выравнивание, что у хедера на мобильном (.hero-nav: сверху
+   clamp(20px, 2.6vw, 32px), элементы по центру по вертикали) — лого и "(закрыть)" встают
+   ровно туда, где были лого и "(меню)" */
+.mobile-menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: clamp(20px, 2.6vw, 32px);
+}
+
+/* лого в меню — просто чёрное, без маски-инверсии хедера (фон тут всегда белый) */
+.mobile-menu .logo-text-img {
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* при открытии скрипт переводит фокус на "(закрыть)" — рамку показываем только при работе
+   с клавиатуры */
+.mobile-menu-close:focus {
+  outline: none;
+}
+.mobile-menu a:focus-visible,
+.mobile-menu-close:focus-visible {
+  outline: 1px solid #000;
+  outline-offset: 4px;
+}
+
+/* --- центр: ссылки столбиком по центру экрана (занимают всё свободное место между верхом
+   и низом, внутри — по центру) */
+.mobile-menu-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+}
+
+.mobile-menu-link {
+  font-family: "GT America Mono", monospace;
+  font-size: 16px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* --- низ: копия футера (.contacts) — его мобильные стили (соцсети строкой над почтой 32px,
+   зазор 10px) уже заданы выше в @media (max-width: 480px), тут только убираем внешние
+   отступы футера страницы */
+.mobile-menu .contacts {
+  margin-top: 0;
+  padding-bottom: 0;
+}
+/* соцсети в меню мельче, чем в футере страницы (там 16px) — по макету 12px */
+.mobile-menu .contacts-links {
+  font-size: 12px;
+}
+
+/* ссылки и низ: при ОТКРЫТИИ плавно проявляются по очереди, когда круг уже почти закрыл
+   экран (задержка 0.35s + 0.1s на каждый следующий элемент, --i ставит скрипт).
+   При ЗАКРЫТИИ текст никак не анимируется — остаётся как есть, круг просто схлопывается
+   поверх него; в скрытое состояние (opacity 0, сдвиг вниз) он сбрасывается мгновенно уже
+   после того, как круг закрылся и слой спрятан (0s с задержкой 0.8s — с запасом после 0.7s
+   анимации круга, чтобы ни один кадр сброса не попал на экран). */
+.mobile-menu-link,
+.mobile-menu-contacts {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0s linear 0.8s,
+    transform 0s linear 0.8s;
+}
+
+.mobile-menu.is-open .mobile-menu-link,
+.mobile-menu.is-open .mobile-menu-contacts {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.9s cubic-bezier(0.33, 1, 0.68, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(0.35s + var(--i, 0) * 0.1s);
+}
+
+/* пока меню открыто — страница под ним не прокручивается (Lenis останавливает сам скрипт) */
+html.mobile-menu-open,
+html.mobile-menu-open body {
+  overflow: hidden;
+}
+
+/* меню только для мобильной вёрстки — на ширине больше 480 его нет вообще */
+@media (min-width: 481px) {
+  .mobile-menu {
+    display: none;
+  }
+}
+
+/* без анимаций: слой просто появляется/исчезает, содержимое сразу на месте */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu.is-open {
+    clip-path: none;
+    transition: none;
+  }
+  .mobile-menu-link,
+  .mobile-menu-contacts,
+  .mobile-menu.is-open .mobile-menu-link,
+  .mobile-menu.is-open .mobile-menu-contacts {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

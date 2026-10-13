@@ -1,0 +1,1035 @@
+/* ===== страница кейса (Young Con 2026 и другие) ===== */
+
+.case-wrap {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  /* РАУНД 28: тот же приём, что у .hero в main.css — .hero-nav внутри снова position:absolute
+     (скрытие/появление при скролле), .case-wrap даёт ему точку отсчёта (position:relative) и
+     компенсирует освободившееся место отступом сверху (высота хедера + прежний gap 19px). */
+  position: relative;
+  padding-top: calc(var(--nav-h, 110px) + 19px);
+}
+
+/* --- назад + факты --- */
+.case-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.case-back {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 7vw, 100px);
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.case-back img {
+  display: block;
+  width: 47px;
+  height: 13px;
+}
+
+.case-back span {
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.case-facts {
+  width: min(100%, 532px);
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.case-facts-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 0;
+  border-bottom: 1px solid #000;
+}
+
+.case-facts-row a { cursor: pointer; }
+
+/* первая строка (сайт / тг канал) — ниже остальных (50px), чтобы текст был на одном
+   уровне со словом «Назад» рядом, см. Figma */
+.case-facts-row--first {
+  padding: 13px 0 25px;
+}
+
+/* ===== РАУНД 39: подчёркивание при наведении — текст "сайт"/"тг канал" (первая строка
+   фактов, Figma нода 12:3932) и "ссылка" у карточек (Figma нода 12:4049). Тот же приём,
+   что у пунктов меню в хедере (.nav-links a::after, main.css) — тонкая линия выезжает
+   слева направо, только здесь без mix-blend-mode (хедер лежит поверх разных фонов, тут
+   всегда чёрный текст на белом, блендинг не нужен). Смена символов при наведении — в
+   js/nav.js (тот же общий scrambleTree(), что и у остальных ссылок по сайту). Стрелка
+   .case-facts-arrow в подчёркивание намеренно не входит — просили только сам текст. */
+.case-facts-row--first a:not(.case-facts-arrow) {
+  position: relative;
+}
+
+.case-facts-row--first a:not(.case-facts-arrow)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.case-facts-row--first a:not(.case-facts-arrow):hover::after {
+  transform: scaleX(1);
+}
+
+.case-facts-arrow img {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.case-facts-value-multi {
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* строка фактов с двухстрочным значением (Thothex, «результаты») — той же высоты, что и
+   обычная однострочная («дата», 64px): обычная = 24 + 15 (строка текста) + 24 + 1 (линия),
+   двухстрочное значение = 2 × 1.4em = 33.6px, поэтому вертикальные отступы уменьшены на
+   половину разницы (33.6 − 15) / 2 = 9.3px → по 14.7px сверху и снизу. */
+.case-facts-row:has(.case-facts-value-multi) {
+  padding-top: calc(24px - (2.8em - 15px) / 2);
+  padding-bottom: calc(24px - (2.8em - 15px) / 2);
+}
+
+.case-facts-tags {
+  border-bottom: none;
+  align-items: flex-start;
+  padding-top: 20px;
+  padding-bottom: 0;
+}
+
+.case-facts-tags ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  text-align: right;
+}
+
+/* --- заголовок --- */
+.case-title {
+  margin: clamp(36px, 6.5vw, 96px) 0 clamp(50px, 9vw, 130px);
+  display: flex;
+  flex-direction: column;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.case-title-main {
+  font-family: "Panama", serif;
+  font-weight: normal;
+  font-size: clamp(44px, 7.35vw, 100px);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.case-title-year {
+  font-family: "PP Editorial New", serif;
+  font-weight: 200;
+  font-size: clamp(38px, 6.32vw, 86px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* --- о проекте --- */
+.case-about {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #000;
+  padding-top: 40px;
+  padding-bottom: 40px; /* от текста «о проекте» до полоски — 40px (по просьбе Лены) */
+  margin-bottom: 31px; /* + 19px flex-gap у .case-wrap = 50px от полоски до коллажа фото (по просьбе Лены) */
+}
+
+.case-about-label {
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.case-about-text {
+  margin: 0;
+  width: min(100%, 532px);
+  font-family: "Neue Haas Grotesk Display Pro", sans-serif;
+  font-size: 19px;
+  line-height: 21px;
+  text-align: justify;
+  text-transform: uppercase;
+}
+
+/* --- коллаж фото кейса --- */
+.case-canvas {
+  position: relative;
+  /* z-index:0 — свой локальный stacking context, чтобы z-index у стрелок карусели внутри (ниже)
+     не утекал на уровень всей страницы */
+  z-index: 0;
+  width: 100%;
+}
+
+/* высота канваса у каждого кейса своя (см. высоту коллажа в Figma) —
+   раньше у всех страниц было одно и то же значение Young Con (3445.355px),
+   из-за чего на Yandex/Thothex/eng flow канвас растягивался намного выше, чем нужно,
+   и снизу появлялся лишний пустой отступ */
+.case-canvas--young-con { aspect-ratio: 1360 / 3445.355; }
+.case-canvas--yandex     { aspect-ratio: 1360 / 1873; }
+.case-canvas--thothex    { aspect-ratio: 1360 / 2627; }
+.case-canvas--eng-flow   { aspect-ratio: 1360 / 2070; }
+
+.case-canvas > * {
+  position: absolute;
+}
+
+/* РАУНД 31: на Young Con фото/подписи теперь не всегда прямые дети .case-canvas — часть из них
+   обёрнута в .case-gallery/.case-photo-pair/.case-photo-offset для мобильного Figma-макета (см.
+   young-con.html и мобильный блок ниже). На десктопе эти обёртки display:contents (следующее
+   правило) — из DOM-дерева для раскладки/покраски они пропадают, но для CSS-селекторов (в
+   отличие от layout) дерево остаётся прежним, поэтому .case-canvas > * их больше не видит.
+   Дублируем position:absolute явным селектором по классу, чтобы не зависеть от глубины вложенности. */
+.case-canvas .case-photo,
+.case-canvas .case-caption {
+  position: absolute;
+}
+
+/* РАУНД 32: та же история для .case-card-meta на карточных страницах (Yandex и т.п.) —
+   у Yandex он теперь тоже бывает обёрнут в .case-card-group для мобильного макета
+   (см. ниже и yandex.html), поэтому дублируем position:absolute и для него явным
+   селектором. На Thothex/eng flow .case-card-meta остаётся прямым ребёнком .case-canvas
+   (обёртки нет) — им это правило ничего не меняет, он и так был .case-canvas > *. */
+.case-canvas .case-card-meta {
+  position: absolute;
+}
+
+.case-gallery,
+.case-photo-pair,
+.case-photo-offset,
+.case-card-group,
+.case-merch-gallery,
+.case-merch-row {
+  display: contents;
+}
+
+.case-photo {
+  overflow: hidden;
+}
+
+/* РАУНД 42: скруглённые углы у фото-мокапов приложения (Thothex Visiom, десктоп — Figma
+   нода 12:4158 и 4 её соседа в той же группе, все rounded-[20px]). Класс в разметке
+   (thothex.html) уже был у app-1..app-4 ("case-photo--rounded"), но без этого правила ничего
+   не скруглял — чистая недоделка. overflow:hidden уже есть у .case-photo выше, этого
+   достаточно, чтобы радиус обрезал и саму картинку внутри, без border-radius на <img>. */
+.case-photo--rounded {
+  border-radius: 20px;
+}
+
+.case-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.case-caption {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  font-family: "GT America Mono", monospace;
+  font-size: clamp(13px, 1.4vw, 19px);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.case-caption-num {
+  flex-shrink: 0;
+  letter-spacing: -0.0882em;
+}
+
+.case-caption-text {
+  font-family: "Neue Haas Grotesk Display Pro", sans-serif;
+  text-align: justify;
+  line-height: 1.1;
+}
+
+.case-chevron {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- заключительный текст + стрелка наверх --- */
+.case-outro-note {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: var(--gap-section);
+}
+
+.case-outro-text {
+  margin: 0;
+  font-family: "GT America Mono", monospace;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: justify;
+  text-transform: uppercase;
+}
+
+/* позиция/ширина итогового текста — своя на каждой странице (снято из Figma Dev Mode,
+   у Young Con с другим расположением из-за особенностей слоя в самой Figma) */
+.case-outro-text--young-con { margin-left: 20.294%; width: 50%; } /* левый край — по фото «Онлайн-трансляции» (3) */
+.case-outro-text--yandex    { margin-left: 5.85%;  width: 27.04%; }
+.case-outro-text--thothex   { margin-left: 0;      width: 39.12%; }
+.case-outro-text--eng-flow  { margin-left: 0;      width: 39.12%; }
+
+/* Yandex, десктоп: итоговый текст не отдельной строкой под коллажем, а внутри него — нижний
+   край текста на одном уровне с нижним краем последней карточки («Дизайн для верстки»), а
+   стрелка «наверх» остаётся в потоке справа и оказывается ниже всего. Текст выведен из потока
+   (position:absolute от .case-outro-note), подъём --outro-lift считает js/case-cards.js — высота
+   подписи карточки в px, а коллаж в %, поэтому одним CSS точное значение не получить.
+   Только >860px: на мобильном текст снова в обычном потоке (см. адаптацию ниже). */
+@media (min-width: 861px) {
+  .case-wrap--yandex .case-outro-note,
+  .case-wrap--eng-flow .case-outro-note {
+    position: relative;
+    justify-content: flex-end;
+  }
+  /* без десктопного var(--gap-section): текст и так внутри коллажа, а стрелке хватает
+     остатка высоты коллажа под последней карточкой (~40px) — как в макете. У eng flow
+     margin-top выставляет js/case-cards.js (стрелка на 40px ниже последней карточки). */
+  .case-wrap--yandex .case-outro-note {
+    margin-top: 0;
+  }
+  .case-wrap--yandex .case-outro-text--yandex,
+  .case-wrap--eng-flow .case-outro-text--eng-flow {
+    position: absolute;
+    bottom: var(--outro-lift, 0px);
+  }
+  .case-wrap--yandex .case-outro-text--yandex {
+    left: 5.85%;
+    margin-left: 0;
+  }
+  .case-wrap--eng-flow .case-outro-text--eng-flow {
+    left: 0; /* по горизонтали как было: margin-left 0, ширина 39.12% */
+  }
+}
+
+/* Young Con, десктоп: от низа последнего фото коллажа (баннер хедлайнера, top 76.796% +
+   height 17.152% = 93.948% высоты) до итогового текста — ровно 80px. Под этим фото в коллаже
+   остаётся 6.052% его высоты пустого места (3445.355 × 0.06052 ≈ 208.5px при ширине 1360) —
+   вычитаем его отрицательным margin. % у margin считается от ширины, а высота коллажа
+   пропорциональна ширине (aspect-ratio), поэтому 208.5 / 1360 = 15.332% верно на любой ширине.
+   61px, а не 80 — ещё 19px добавляет flex-gap самого .case-wrap. */
+@media (min-width: 861px) {
+  .case-wrap--young-con .case-outro-note {
+    margin-top: calc(61px - 15.332%);
+  }
+}
+
+.case-totop {
+  flex-shrink: 0;
+  width: 24px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* --- футер (переиспользует .contacts из main.css) --- */
+/* 50px от итогового текста/стрелки наверх до полоски, 40px от полоски до почты/соцсетей
+   (см. Figma Dev Mode, нода 12:3902 и аналоги — одинаково на всех 4 страницах кейсов) */
+.case-footer-wrap {
+  max-width: 1360px;
+  margin: 50px auto 0;
+}
+
+.case-footer-wrap .contacts {
+  margin-top: 40px;
+}
+
+/* --- карточки кейса (Yandex и другие "карточные" страницы) --- */
+.case-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.case-card-divider {
+  height: 1px;
+  background: #000;
+  width: 100%;
+}
+
+.case-card-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: "GT America Mono", monospace;
+  font-size: clamp(10px, 0.95vw, 12px);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.case-card-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.case-card-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.case-card-link img {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+/* РАУНД 39: подчёркивание слова "ссылка" при наведении — см. комментарий у
+   .case-facts-row--first выше, тот же приём. На <span> (не на всю .case-card-link),
+   чтобы линия была только под текстом, а не под иконкой-стрелкой рядом. */
+.case-card-link span {
+  position: relative;
+}
+
+.case-card-link span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.case-card-link:hover span::after {
+  transform: scaleX(1);
+}
+
+.case-card-tags {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  color: #2a9fff;
+}
+
+.case-card-tag-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.case-card-tag-group--row {
+  flex-direction: row;
+  gap: 10px;
+}
+
+.case-card-tag-single {
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* --- карусель (карточка Yandex Cloud) --- */
+.case-carousel img[data-slide] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* смена слайда — чистая прокрутка, без прозрачности и масштаба (с ними было мерцание:
+     две полупрозрачные картинки накладывались друг на друга). Неактивные слайды стоят
+     за правым краем (translateX(100%)) и обрезаются overflow:hidden у .case-photo. Скрипт
+     карусели в yandex.html перед анимацией ставит входящий слайд с нужной стороны, а
+     уходящий отправляет в противоположную — инлайн-стилем с !important (чтобы перебить
+     мобильные !important ниже). */
+  transform: translateX(100%);
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+  display: block;
+}
+
+.case-carousel img[data-slide].active {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-carousel img[data-slide] {
+    transition: none;
+  }
+}
+
+.case-carousel-arrow {
+  position: absolute;
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.case-carousel-arrow img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* ===== РАУНД 27: карточки кейса "выезжают" при скролле (референс klyuse.com) =====
+   Класс .case-canvas--card-reveal вешает js/case-cards.js — теперь на всех 4 кейс-страницах,
+   включая Young Con (сначала просили только Yandex/Thothex/eng flow, следующим сообщением
+   добавили и Young Con). У Young Con вместо .case-card-meta используется .case-caption
+   (своя структура подписи "(1)/(2)/(3)/(4)" — то же самое по смыслу, просто другой класс),
+   поэтому в селектор добавлен и он. Без JS (или с prefers-reduced-motion) класса не будет —
+   коллаж останется как есть, полностью видимым, без скрытия. Каждая карточка выезжает
+   из своего направления (чередуется по порядку в разметке — .case-carousel-arrow
+   (стрелки карусели на Yandex) намеренно не участвуют, остаются всегда видимыми/кликабельными).
+
+   РАУНД 37: было `.case-canvas--card-reveal > .case-photo` (прямой ребёнок) — с тех пор, как
+   .case-photo/.case-card-meta на Yandex/Thothex/eng flow и .case-photo/.case-caption на Young
+   Con обёрнуты в .case-card-group/.case-gallery/.case-photo-pair/.case-photo-offson (мобильные
+   раунды 31-34, display:contents на десктопе), они больше не прямые дети .case-canvas в
+   DOM-дереве (display:contents меняет только рендер/покраску, не дерево для CSS-селекторов —
+   та же готча, что уже чинили для position:absolute выше, см. .case-canvas .case-photo). Из-за
+   этого `>` вообще переставал матчиться, opacity/transform из этого правила не применялись —
+   карточки были видны сразу, без анимации выезда. Меняю на обычный потомковый селектор (пробел
+   вместо `>`) — работает независимо от глубины вложенности, как и остальные похожие правила. */
+.case-canvas--card-reveal .case-photo,
+.case-canvas--card-reveal .case-card-meta,
+.case-canvas--card-reveal .case-caption {
+  opacity: 0;
+  transform: translate(var(--card-reveal-x, 0px), 26px) rotate(var(--card-reveal-r, 0deg)) scale(0.95);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--card-reveal-delay, 0s);
+  pointer-events: none;
+}
+
+.case-canvas--card-reveal .case-photo.is-revealed,
+.case-canvas--card-reveal .case-card-meta.is-revealed,
+.case-canvas--card-reveal .case-caption.is-revealed {
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg) scale(1);
+  pointer-events: auto;
+}
+
+/* ===== mobile: коллаж превращается в обычный вертикальный список ===== */
+@media (max-width: 860px) {
+  .case-top { flex-direction: column; gap: 32px; }
+  .case-facts { width: 100%; }
+
+  .case-title { margin: 40px 0 48px; }
+
+  .case-about { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  .case-canvas {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .case-canvas .case-photo,
+  .case-canvas .case-caption {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+  .case-photo img { aspect-ratio: auto; }
+  .case-caption { margin-bottom: 4px; }
+
+  .case-outro-note { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .case-outro-text { margin-left: 0; width: 100%; }
+
+  .case-card-meta { margin-bottom: 4px; }
+  .case-card-row { flex-direction: column; gap: 12px; }
+  .case-card-tags { justify-content: flex-start; }
+  .case-card-tag-group { align-items: flex-start; text-align: left; }
+
+  /* карусель Yandex Cloud: на мобильном показываем все слайды стопкой, стрелки скрываем */
+  .case-carousel-arrow { display: none !important; }
+  .case-carousel {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px;
+  }
+  .case-carousel img[data-slide] {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important; /* стопка — без сдвига за край, как у карусели */
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* ===== РАУНД 33: общий фикс ритма между блоками .case-wrap (назад/факты → заголовок,
+   о проекте → коллаж) на самом узком экране (≤480px) =====
+   Найдено при сверке Thothex по Dev Mode (нода 130:10072) и перепроверено по уже сданным
+   Yandex/Young Con: у всех кейс-страниц в Figma между корневыми блоками (хедер, заголовок+
+   факты+о проекте, каждая карточка коллажа) ОДИНАКОВЫЙ зазор 60px — а .case-wrap в нашей
+   вёрстке использует свой десктопный flex-gap (19px) и на ≤480 он так и остался
+   неизменным, хотя .case-about{margin-bottom:0} (блок выше) убрал десктопную компенсацию.
+   В итоге зазоры "назад → заголовок" и "о проекте → коллаж" были на 41px (60-19) меньше,
+   чем в макете — не заметили на глаз при визуальной проверке Yandex/Young Con, вскрылось
+   только сейчас через точные Dev Mode координаты. Чиню явной добавкой margin-bottom (а не
+   правкой самого .case-wrap{gap}) — у .case-title уже есть свой margin-top (разный на
+   каждой странице, см. ниже), трогать общий gap значило бы задеть и зазор "заголовок →
+   о проекте" (между ними в нашей разметке нет прямого соответствия в Figma — там этот
+   участок прерывается блоком факты, которого у нас тут нет, — его уже подбирали на глаз
+   отдельно, значение проверено по скриншотам и трогать не нужно). */
+@media (max-width: 480px) {
+  .case-top { margin-bottom: 41px; }
+  .case-about { margin-bottom: 41px; }
+}
+
+/* ===== РАУНД 31: точный мобильный макет Young Con 2026 по Figma ("Young Con 2026 — мобильная",
+   нода 130:10380, холст 390px) =====
+   Та же узкая точка перелома (480px), что и у мобильной главной (main.css, РАУНД 29) — макет в
+   Figma нарисован под телефон, не под планшет; 480-860 остаётся общей упрощённой адаптацией из
+   блока выше. Цифры (padding/gap/font-size) сняты из Dev Mode для холста 390px, контентная зона
+   350px (как и везде на сайте — см. main.css). Пока сделано только для Young Con: у остальных
+   трёх кейс-страниц отдельного мобильного макета Лена ещё не присылала, у них остаётся общая
+   адаптация выше без изменений (не трогаю по просьбе "verify only the requested screen"). */
+@media (max-width: 480px) {
+
+  .case-wrap { padding-top: calc(var(--nav-h, 110px) + 12px); } /* было +19px — в Dev Mode между хедером и "назад" 12px */
+
+  /* --- назад + факты --- */
+  .case-facts-row--first { padding: 24px 0; } /* десктопный спецотступ (13/25, чтобы "сайт" был вровень с "назад" в соседней колонке) тут не нужен — на мобильном строки идут одна под другой */
+
+  /* --- заголовок --- */
+  .case-title { margin: 59px 0 20px; }
+  .case-title-main { font-size: 64px; }
+  .case-title-year { font-size: 58px; }
+
+  /* --- о проекте --- */
+  .case-about {
+    gap: 20px;
+    padding-top: 8px;
+    padding-bottom: 20px;
+    /* margin-bottom больше не обнуляется тут — общий фикс ритма (РАУНД 33, блок выше)
+       теперь сам даёт правильные 41px, которые вместе с .case-wrap{gap:19px} дают
+       верные 60px до коллажа (см. комментарий там) */
+  }
+  .case-about-text { font-size: 16px; }
+
+  /* --- подписи галерей: по Dev Mode gap между номером и текстом 12px (не 20), текст 16px (не clamp) --- */
+  .case-caption { gap: 12px; font-size: 16px; }
+
+  /* --- сам коллаж: вместо абсолютного позиционирования — обычный поток, каждая галерея (1)-(4)
+     своим flex-столбцом со своим внутренним зазором (подпись → фото), между галереями — общий
+     ритм страницы 60px (см. комментарий у .case-gallery в young-con.html) --- */
+  .case-canvas {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+  .case-gallery {
+    /* .case-canvas > * (база, см. начало файла) делает ЛЮБОГО прямого ребёнка .case-canvas
+       position:absolute — на десктопе это не проблема (.case-gallery сам display:contents,
+       через него position не применяется, см. комментарий там), а вот тут, где .case-gallery
+       уже настоящий flex-контейнер, это нужно явно отменить — иначе все 4 галереи схлопываются
+       в одну точку, а сам .case-canvas остаётся нулевой высоты (ровно то, что чинит эта строка) */
+    position: static;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .case-gallery--1 { gap: 40px; }
+  .case-gallery--2 { gap: 20px; }
+  .case-gallery--3 { gap: 24px; }
+  .case-gallery--4 { gap: 24px; }
+
+  .case-canvas .case-photo,
+  .case-canvas .case-caption {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* (2) экраны сцен — пары в ряд (gap-12, высота ряда 150px, пропорции — см. style= у каждого
+     .case-photo в young-con.html, flex/aspect-ratio там работают и на десктопе, но там их
+     перекрывают явные width/height в процентах, так что это чисто мобильные значения) */
+  .case-photo-pair {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    height: 150px;
+  }
+  .case-canvas .case-photo-pair .case-photo {
+    width: auto !important;
+    height: 100% !important;
+  }
+
+  /* (4) баннеры хедлайнеров — смещённая сетка: широкий портрет слева во всю высоту ряда,
+     пейзажный кадр справа, центрированный по высоте (см. комментарий в young-con.html —
+     align-items:center с fixed-width левым элементом математически даёт то же смещение
+     по вертикали, что и ml/mt в самой Figma-ноде) */
+  .case-photo-offset {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+  }
+  .case-canvas .case-photo-offset .case-photo {
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* --- заключительный текст: без стрелки "наверх" (в Dev Mode для мобильного её нет вообще —
+     после текста сразу футер), во всю ширину --- */
+  .case-outro-note { margin-top: 60px; }
+  .case-outro-text--young-con { margin-left: 0; width: 100%; }
+  .case-totop { display: none; }
+}
+
+/* ===== РАУНД 32: точный мобильный макет Yandex по Figma ("Yandex — мобильная", нода
+   130:10472, холст 390px) — карточный паттерн (фото + .case-card-meta), в отличие от
+   Young Con с галереями/подписями выше. Общий ритм (gap 60px между карточками, заголовок
+   59/20, about-text 16px, стрелка "наверх" скрыта) уже покрыт общим блоком выше и
+   совпадает 1-в-1 с Young Con — но часть цифр у Yandex своя по самой Figma-ноде (первая
+   строка фактов 13/24 вместо 24/24, зазор about 16 вместо 20), поэтому новые правила
+   даны через .case-wrap--yandex, а не добавлены в общий блок — чтобы не задеть уже
+   сверенные цифры Young Con. Числа сняты из Dev Mode (get_metadata, нода 130:10472). */
+@media (max-width: 480px) {
+
+  .case-wrap--yandex .case-facts-row--first { padding: 13px 0 24px; }
+
+  .case-wrap--yandex .case-about { gap: 16px; }
+
+  /* --- карточки: фото + .case-card-group (см. готчу display:contents в начале файла).
+     position:relative (не static, как у .case-gallery в Young Con) — карточке с каруселью
+     (yandex cloud) это ещё и даёт точку отсчёта для стрелок prev/next, которые в разметке
+     лежат рядом с фото, а не внутри него (см. ниже); на остальных 6 карточках relative без
+     смещений визуально ничем не отличается от static. */
+  .case-wrap--yandex .case-card-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .case-wrap--yandex .case-canvas .case-photo,
+  .case-wrap--yandex .case-canvas .case-card-meta {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* рамка у фото — есть только в мобильном Figma-макете Yandex, на десктопе её нет */
+  .case-wrap--yandex .case-canvas .case-photo {
+    border: 1px solid rgba(20, 20, 20, 0.12);
+  }
+
+  .case-wrap--yandex .case-card-meta { gap: 15px; }
+
+  /* строка заголовок/теги — снова в ряд (не колонкой, как в общей адаптации 480-860
+     выше), по Dev Mode так же, как на десктопе, просто в более узкой колонке */
+  .case-wrap--yandex .case-card-row {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .case-wrap--yandex .case-card-tags {
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .case-wrap--yandex .case-card-tag-group {
+    gap: 10px;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  /* у карточек «подкаст» и «yandex cloud» по Dev Mode теги идут не парой-колонкой,
+     а плоским рядом — класс добавлен только этим группам в yandex.html */
+  .case-wrap--yandex .case-card-tag-group--flat {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* у карточки «верстка» на десктопе теги в ряд (.case-card-tag-group--row), а в
+     мобильном Dev Mode — снова колонкой, как у остальных карточек (ВЕБ-дизайн над
+     версткой, gap 10) — отменяем десктопный модификатор только на мобильном */
+  .case-wrap--yandex .case-card-tag-group--row {
+    flex-direction: column;
+  }
+
+  /* --- карусель Yandex Cloud: в мобильном Figma-макете она остаётся каруселью (один
+     активный слайд, стрелки по бокам), не превращается в стопку слайдов без стрелок,
+     как в общей адаптации 480-860 выше — поэтому здесь явно всё отменяем обратно.
+     Стрелки у Dev Mode чуть выступают за края фото (±17px) и стоят по центру высоты. */
+  .case-wrap--yandex .case-canvas .case-photo.case-carousel {
+    /* position остаётся static (общее правило .case-photo чуть выше) — не relative:
+       у .case-carousel есть десктопный инлайн-style с left/top в процентах, а
+       position:relative, в отличие от static, использует их как смещение от исходного
+       места, из-за чего карусель уезжала вбок. Точка отсчёта для стрелок — не сама
+       карусель, а .case-card-group (см. выше), ей position:relative уже не нужен. */
+    display: block !important;
+    aspect-ratio: 1 / 1;
+  }
+  .case-wrap--yandex .case-carousel img[data-slide] {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto;
+    /* снова карусель-прокрутка (см. базовые правила .case-carousel): отменяем стопку 480-860 */
+    transform: translateX(100%) !important;
+  }
+  .case-wrap--yandex .case-carousel img[data-slide].active {
+    transform: none !important;
+  }
+  .case-wrap--yandex .case-carousel-arrow {
+    display: block !important;
+    position: absolute !important;
+    /* 175px = половина высоты фото-карусели (350px, квадрат 1:1) — не 50%, так как
+       точка отсчёта теперь .case-card-group целиком (фото + отступ + метаданные), а не
+       сама .case-carousel (стрелки лежат в разметке рядом с фото, не внутри него) */
+    top: 175px !important;
+    transform: translateY(-50%);
+    width: 10px !important;
+    height: 18.8px !important;
+  }
+  .case-wrap--yandex .case-carousel-prev { left: -17px !important; }
+  .case-wrap--yandex .case-carousel-next { left: auto !important; right: -17px !important; }
+
+  .case-outro-text--yandex { margin-left: 0; width: 100%; }
+}
+
+/* ===== РАУНД 33: точный мобильный макет Thothex по Figma ("THOTHEX — мобильная", нода
+   130:10072, холст 390px). Самая разная из трёх уже сделанных кейс-страниц: карточки —
+   не одно фото на карточку (как у Yandex), а МНОГОРЯДНЫЕ галереи (мудборд мерча — 9 фото
+   в сетке 2+3+2+2, экраны приложения — 4 из 5 десктопных в сетке 2+2). Для них — новые
+   обёртки .case-merch-gallery/.case-merch-row (тот же приём display:contents, что и
+   .case-gallery/.case-card-group выше, см. базовые правила в начале файла). Карточки с
+   одним фото (вебка Thothex Hackathon, баннеры) переиспользуют .case-card-group как у
+   Yandex. Числа — из Dev Mode (get_metadata, нода 130:10072); где они совпадают с уже
+   сданными Yandex/Young Con (теги gap:10, card-meta gap:15, facts-row-first 13/24) —
+   переиспользован тот же паттерн, просто заново объявлен через .case-wrap--thothex,
+   чтобы не задеть цифры других страниц. Где отличаются — отмечено отдельно (заголовок
+   margin:16px, не 59/59; about-text 16px без clamp — тут не отличается, но указано явно
+   для ясности). У фото Thothex (в отличие от Yandex) рамки в Dev Mode нет — не добавляю. */
+@media (max-width: 480px) {
+
+  /* --- заголовок: тут Dev Mode даёт совсем другой отступ сверху (16px), не 59 как у
+     Yandex/Young Con — видимо, у Thothex блок "о проекте" короче и общий ритм другой --- */
+  .case-wrap--thothex .case-title { margin: 16px 0 20px; }
+
+  .case-wrap--thothex .case-facts-row--first { padding: 13px 0 24px; }
+
+  .case-wrap--thothex .case-about { gap: 16px; }
+
+  /* --- общая обёртка карточки: фото(-и) + .case-card-meta. gap:20 по умолчанию — для
+     карточек с одним фото (вебка Hackathon, баннеры); у галерейных карточек (мудборд,
+     экраны приложения) свой зазор 16 — .case-card-group--gallery ниже. position:static,
+     не relative (как у Yandex) — на Thothex нет карусели, якорь не нужен. */
+  .case-wrap--thothex .case-card-group {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  .case-wrap--thothex .case-card-group--gallery { gap: 16px; }
+
+  .case-wrap--thothex .case-canvas .case-photo,
+  .case-wrap--thothex .case-canvas .case-card-meta {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* --- мудборд мерча: сетка 2+3+2+2, зазор между рядами 12px, фото пропорция 3:4,
+     последний ряд (--tall) — 4096:3277 (чуть выше) --- */
+  .case-wrap--thothex .case-merch-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .case-wrap--thothex .case-merch-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+  .case-wrap--thothex .case-canvas .case-merch-row .case-photo {
+    width: auto !important;
+    height: auto !important;
+    flex: 1 1 0;
+    min-width: 0;
+    aspect-ratio: 3 / 4;
+  }
+  /* те же 4 класса-селектора, что и правило выше — побеждает по порядку (позже в файле) */
+  .case-wrap--thothex .case-canvas .case-merch-row--tall .case-photo {
+    aspect-ratio: 3277 / 4096;
+  }
+
+  /* --- экраны приложения Thothex visiom: 2 ряда по 2, зазор между рядами 16 (не 12, как
+     у мудборда), пропорция экрана 131:284, скруглённые углы 13px — в Figma мобильном
+     макете они есть, на десктопе их нет, поэтому не трогаю .case-photo глобально.
+     app-5 (молекулярный редактор) в мобильный макет не вошёл — прячем. --- */
+  .case-wrap--thothex .case-merch-gallery--visiom { gap: 16px; }
+  .case-wrap--thothex .case-canvas .case-merch-gallery--visiom .case-photo {
+    aspect-ratio: 131 / 284;
+    border-radius: 13px;
+  }
+  .case-wrap--thothex .case-mobile-hide { display: none !important; }
+
+  /* --- теги карточек: тот же паттерн, что уже проверен на Yandex (gap:10 на обоих
+     уровнях, колонкой справа); у карточки «баннеры» в Dev Mode — плоский ряд, как у
+     подкаста Yandex, класс добавлен только её двум группам в thothex.html --- */
+  .case-wrap--thothex .case-card-row {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .case-wrap--thothex .case-card-tags {
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .case-wrap--thothex .case-card-tag-group {
+    gap: 10px;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .case-wrap--thothex .case-card-tag-group--flat {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  .case-wrap--thothex .case-card-meta { gap: 15px; }
+}
+
+/* ===== РАУНД 34: точный мобильный макет eng flow по Figma ("THOTHEX — мобильная" —
+   внутреннее имя ноды устаревшее/не совпадает, но по содержимому (заголовки карточек,
+   теги, текст "о проекте") однозначно это eng flow; нода 130:10220, холст 390px).
+   Самая простая из 4 кейс-страниц — все 6 карточек одинаковые (одно фото + .case-card-meta,
+   без галерей/карусели), и все 6 фото квадратные 1:1 и в Figma, и по факту (проверено
+   реальными пикселями файлов assets/photos/eng-flow/*.jpg — все ~1:1), поэтому отдельный
+   aspect-ratio на фото, в отличие от Thothex, не нужен — хватает already-общего
+   width:100%/height:auto (запасной вариант браузера: height:100% у .case-photo img
+   при auto-высоте родителя трактуется как auto, т.е. пропорции берутся из самого файла). */
+@media (max-width: 480px) {
+
+  /* --- заголовок: pt/pb сняты напрямую из Dev Mode (Project heading, нода 130:10244) —
+     16/20, как у Thothex, не 59/20, как у Yandex/Young Con */
+  .case-wrap--eng-flow .case-title { margin: 16px 0 20px; }
+
+  .case-wrap--eng-flow .case-facts-row--first { padding: 13px 0 24px; }
+
+  .case-wrap--eng-flow .case-about { gap: 16px; }
+
+  /* --- карточки: фото + .case-card-meta, одна карточка = один .case-card-group,
+     тот же "простой" паттерн, что у Yandex/Thothex (gap:20 фото→метаданные) */
+  .case-wrap--eng-flow .case-card-group {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .case-wrap--eng-flow .case-canvas .case-photo,
+  .case-wrap--eng-flow .case-canvas .case-card-meta {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .case-wrap--eng-flow .case-card-meta { gap: 15px; }
+
+  /* --- теги карточек: тот же проверенный паттерн, что у Yandex/Thothex (gap:10 на
+     обоих уровнях, колонкой справа); у карточки «тематические разговорные клубы» в
+     Dev Mode все 4 тега — один плоский ряд (не 2 колонки, как на десктопе), класс
+     и объединение тегов в одну группу сделаны в eng-flow.html */
+  .case-wrap--eng-flow .case-card-row {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .case-wrap--eng-flow .case-card-tags {
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .case-wrap--eng-flow .case-card-tag-group {
+    gap: 10px;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .case-wrap--eng-flow .case-card-tag-group--flat {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+/* ===== мобильный порядок блоков на всех страницах кейсов (≤480): назад → заголовок →
+   факты (сайт/дата/…) → о проекте → примеры работ. В разметке «назад» и факты лежат вместе
+   в .case-top ПЕРЕД заголовком — на мобильном .case-top «растворяется» (display:contents),
+   его дети становятся flex-элементами самого .case-wrap, и порядок задаётся через order.
+   Отступы — единые для всех 4 страниц (раньше у заголовка были свои: 59/20 у Young Con/
+   Yandex, 16/20 у Thothex/eng flow — под старый порядок): между блоками по 40px вместе с
+   flex-gap 19px у .case-wrap. Правило стоит в самом конце файла — перебивает постраничные
+   .case-wrap--… .case-title с той же специфичностью. */
+@media (max-width: 480px) {
+  .case-wrap > .case-top {
+    display: contents;
+  }
+  .case-wrap > .case-top > .case-back { order: 1; align-self: flex-start; }
+  .case-wrap > .case-title {
+    order: 2;
+    margin: 21px 0 0;
+  }
+  .case-wrap > .case-top > .case-facts {
+    order: 3;
+    margin-top: 21px;
+  }
+  .case-wrap > .case-about {
+    order: 4;
+    margin-top: 21px;
+  }
+  .case-wrap > .case-canvas { order: 5; }
+  .case-wrap > .case-outro-note { order: 6; }
+}
