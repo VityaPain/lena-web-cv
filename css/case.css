@@ -261,7 +261,7 @@
   gap: 20px;
   align-items: flex-start;
   font-family: "GT America Mono", monospace;
-  font-size: clamp(13px, 1.4vw, 19px);
+  font-size: 12px; /* РАУНД 48: было clamp(13px, 1.4vw, 19px) — подписи к работам во всех кейсах 12px */
   line-height: 1.1;
   text-transform: uppercase;
   color: #000;
@@ -292,6 +292,14 @@
   gap: 24px;
   flex-wrap: wrap;
   margin-top: var(--gap-section);
+  /* РАУНД 50: стрелка "наверх" не нажималась на десктопе Young Con и Thothex — блок заходит
+     на пустой низ коллажа (у Young Con — отрицательным margin-top ниже), а .case-canvas с
+     z-index:0 рисуется поверх обычного (не позиционированного) блока и забирает клик.
+     position:relative + z-index:0 — тот же слой, что у коллажа, но блок идёт в разметке
+     позже, поэтому оказывается сверху. Именно 0, а не 1: хедер (.hero-nav, без z-index, в
+     самом конце <body>) должен оставаться поверх — см. комментарий у .hero-nav в main.css. */
+  position: relative;
+  z-index: 0;
 }
 
 .case-outro-text {
@@ -393,7 +401,7 @@
   gap: 16px;
   flex-wrap: wrap;
   font-family: "GT America Mono", monospace;
-  font-size: clamp(10px, 0.95vw, 12px);
+  font-size: 12px; /* РАУНД 48: было clamp(10px, 0.95vw, 12px) — по просьбе Лены 12px на любой ширине */
   line-height: 1.3;
   text-transform: uppercase;
 }
@@ -655,7 +663,7 @@
   .case-about-text { font-size: 16px; }
 
   /* --- подписи галерей: по Dev Mode gap между номером и текстом 12px (не 20), текст 16px (не clamp) --- */
-  .case-caption { gap: 12px; font-size: 16px; }
+  .case-caption { gap: 12px; } /* font-size был 16px по Dev Mode — теперь общий 12px (РАУНД 48) */
 
   /* --- сам коллаж: вместо абсолютного позиционирования — обычный поток, каждая галерея (1)-(4)
      своим flex-столбцом со своим внутренним зазором (подпись → фото), между галереями — общий
@@ -1032,4 +1040,55 @@
   }
   .case-wrap > .case-canvas { order: 5; }
   .case-wrap > .case-outro-note { order: 6; }
+}
+
+/* ===== РАУНД 47: подписи карточек на мобильном (≤480) — по скриншотам Лены =====
+   Слева заголовок и под ним "ссылка", справа теги, прижатые к правому краю: строка тегов
+   вровень с заголовком, следующая — вровень со "ссылкой". Обычные карточки — группы-колонки
+   по 2 тега рядом (сетка 2×2, правила .case-wrap--… выше); тут — только два особых случая.
+   Префикс .case-wrap — чтобы перебить постраничные .case-wrap--… правила выше. */
+@media (max-width: 480px) {
+  /* "ссылка" — на том же шаге от заголовка, что и вторая строка тегов (gap 10px у групп) */
+  .case-wrap .case-card-link { margin-top: 10px; }
+
+  /* --wide (подкаст Yandex; с РАУНДА 48, когда подписи стали 12px, — ещё вебка Hackathon и
+     баннеры Thothex, разговорные клубы eng flow): длинный заголовок — во всю ширину; под ним одной строкой
+     "ссылка" слева и все теги справа. Теги стоят абсолютно по низу строки (там же, где
+     "ссылка" внутри заголовка). Группы-колонки растворяются (display:contents), а order
+     раскладывает теги построчно, как читается сетка 2×2 на десктопе: сначала первые теги
+     обеих групп, потом вторые — "баннеры ретуш ресайз ai". */
+  .case-wrap .case-card-row--wide {
+    display: block;
+    position: relative;
+  }
+  .case-wrap .case-card-row--wide .case-card-tags {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    gap: 10px;
+  }
+  .case-wrap .case-card-row--wide .case-card-tag-group { display: contents; }
+  .case-wrap .case-card-row--wide .case-card-tag-group > :first-child { order: 0; }
+  .case-wrap .case-card-row--wide .case-card-tag-group > :last-child { order: 1; }
+
+  /* --rows (Yandex Cloud): группы не колонками рядом, а строками друг под другом, каждая
+     прижата вправо — "иллюстрация", ниже "стикеры инфографика" (группа --flat — ряд, см.
+     правило .case-wrap--yandex выше) */
+  .case-wrap .case-card-tags--rows {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .case-wrap .case-card-tags--rows .case-card-tag-single { align-self: flex-end; }
+}
+
+/* РАУНД 48: на самых узких телефонах (320px, iPhone SE 1-го поколения) 4 тега --wide в одну
+   строку со "ссылкой" не помещаются и наезжают на неё — там теги идут своей строкой под
+   "ссылкой", прижатые вправо (с 375px и шире всё помещается, проверено замером) */
+@media (max-width: 359px) {
+  .case-wrap .case-card-row--wide .case-card-tags {
+    position: static;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
 }

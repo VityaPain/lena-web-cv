@@ -127,7 +127,9 @@
             style="left: 60.956%; top: 26.962%; width: 34.853%"
           >
             <div class="case-card-divider"></div>
-            <div class="case-card-row">
+            <!-- РАУНД 47: --wide — на мобильном заголовок во всю ширину, ниже в одну
+               строку "ссылка" и теги (см. case.css) -->
+            <div class="case-card-row case-card-row--wide">
               <div class="case-card-title">
                 Подкаст «Доверительный интервал» | 10 выпусков
                 <a
@@ -141,13 +143,10 @@
                 </a>
               </div>
               <div class="case-card-tags">
-                <!-- РАУНД 32: на мобильном (Dev Mode) теги этой карточки идут не парами-колонками,
-                   а плоским рядом — .case-card-tag-group--flat включается только в мобильном
-                   блоке case.css, на десктоп не влияет -->
-                <div class="case-card-tag-group case-card-tag-group--flat">
+                <div class="case-card-tag-group">
                   <span>баннеры</span><span>ресайз</span>
                 </div>
-                <div class="case-card-tag-group case-card-tag-group--flat">
+                <div class="case-card-tag-group">
                   <span>ретуш</span><span>ai</span>
                 </div>
               </div>
@@ -218,10 +217,12 @@
                   <img src="assets/figma/icon-arrow-back.svg" alt="" />
                 </a>
               </div>
-              <div class="case-card-tags">
+              <!-- РАУНД 47: --rows — на мобильном группы строками друг под другом, прижаты
+                 вправо: "иллюстрация", ниже "стикеры инфографика" (см. case.css) -->
+              <div class="case-card-tags case-card-tags--rows">
                 <div class="case-card-tag-single">иллюстрация</div>
                 <div class="case-card-tag-group case-card-tag-group--flat">
-                  <span>инфографика</span><span>стикеры</span>
+                  <span>стикеры</span><span>инфографика</span>
                 </div>
               </div>
             </div>

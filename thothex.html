@@ -334,7 +334,8 @@
             style="left: 10.147%; top: 89.76%; width: 39.118%"
           >
             <div class="case-card-divider"></div>
-            <div class="case-card-row">
+            <!-- РАУНД 48: при 12px теги не помещаются рядом с заголовком — схема --wide, как у подкаста Yandex -->
+            <div class="case-card-row case-card-row--wide">
               <div class="case-card-title">
                 веб-приложение Thothex Hackathon
                 <a
@@ -372,7 +373,8 @@
             style="left: 60.882%; top: 93.51%; width: 39.118%"
           >
             <div class="case-card-divider"></div>
-            <div class="case-card-row">
+            <!-- РАУНД 48: при 12px теги не помещаются рядом с заголовком — схема --wide, как у подкаста Yandex -->
+            <div class="case-card-row case-card-row--wide">
               <div class="case-card-title">
                 баннеры для хакатонов и постов
                 <a
@@ -386,14 +388,14 @@
                 </a>
               </div>
               <div class="case-card-tags">
-                <!-- РАУНД 33: на мобильном (Dev Mode) теги этой карточки — плоский ряд,
-                   как у подкаста Yandex — .case-card-tag-group--flat работает только
-                   в мобильном блоке case.css, десктоп не трогает -->
-                <div class="case-card-tag-group case-card-tag-group--flat">
-                  <span>иллюстрация</span><span>айдентика</span>
+                <!-- РАУНД 47: группы-колонки 2×2 (на десктопе — сетка справа), порядок по
+                   скриншоту Лены: ai/баннеры в первой строке, иллюстрация/айдентика во второй.
+                   На мобильном с РАУНДА 48 — одной строкой рядом со "ссылкой" (--wide) -->
+                <div class="case-card-tag-group">
+                  <span>ai</span><span>иллюстрация</span>
                 </div>
-                <div class="case-card-tag-group case-card-tag-group--flat">
-                  <span>баннеры</span><span>ai</span>
+                <div class="case-card-tag-group">
+                  <span>баннеры</span><span>айдентика</span>
                 </div>
               </div>
             </div>

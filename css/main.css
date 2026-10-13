@@ -985,6 +985,10 @@ html.is-webkit .nav-links a::after {
   .about-text,
   .about-programs {
     flex-basis: 100%;
+  }
+  /* текст "обо мне" остаётся по ширине, как на десктопе (text-align: justify у .about-text) —
+     влево только список программ */
+  .about-programs {
     text-align: left;
   }
 
@@ -1110,9 +1114,13 @@ html.is-webkit .nav-links a::after {
   .hero-greeting-text {
     font-size: 12px;
   }
+  /* в одну строку с фото (nowrap выше) — значит, как на десктопе, прижаты к правому краю;
+     выравнивание влево из блока ≤860 (там цифры переносятся под фото) тут не нужно */
   .hero-stats {
     gap: 4px;
     font-size: 12px;
+    align-items: flex-end;
+    text-align: right;
   }
 
   /* --- типы проектов: тот же физический холст, что на десктопе (см. комментарий выше), только
@@ -1251,6 +1259,7 @@ html.is-webkit .nav-links a::after {
     justify-content: space-between;
     flex-wrap: nowrap;
     gap: 0;
+    font-size: 12px; /* РАУНД 49: было 16px, как на десктопе — по просьбе Лены 12px, как в меню */
   }
 }
 
@@ -1351,7 +1360,8 @@ html.is-webkit .nav-links a::after {
   margin-top: 0;
   padding-bottom: 0;
 }
-/* соцсети в меню мельче, чем в футере страницы (там 16px) — по макету 12px */
+/* соцсети в меню — 12px по макету (с РАУНДА 49 столько же и в мобильном футере страницы,
+   правило оставлено явным, чтобы меню не зависело от размеров футера) */
 .mobile-menu .contacts-links {
   font-size: 12px;
 }

@@ -88,7 +88,8 @@
             style="left: 3.015%; top: 26.618%; width: 39.118%"
           >
             <div class="case-card-divider"></div>
-            <div class="case-card-row">
+            <!-- РАУНД 48: при 12px теги не помещаются рядом с заголовком — схема --wide, как у подкаста Yandex -->
+            <div class="case-card-row case-card-row--wide">
               <div class="case-card-title">
                 тематические разговорные клубы
                 <a
@@ -102,9 +103,15 @@
                 </a>
               </div>
               <div class="case-card-tags">
-                <div class="case-card-tag-group case-card-tag-group--flat">
-                  <span>ретуш</span><span>инфографика</span
-                  ><span>иллюстрация</span><span>ai</span>
+                <!-- РАУНД 47: группы-колонки 2×2, как у остальных карточек (была одна
+                   плоская группа из 4 тегов — на десктопе она шла столбиком в 4 строки),
+                   порядок по скриншоту Лены: ai/инфографика, ретуш/иллюстрация. На мобильном
+                   с РАУНДА 48 — одной строкой рядом со "ссылкой" (--wide) -->
+                <div class="case-card-tag-group">
+                  <span>ai</span><span>ретуш</span>
+                </div>
+                <div class="case-card-tag-group">
+                  <span>инфографика</span><span>иллюстрация</span>
                 </div>
               </div>
             </div>
