@@ -33,6 +33,23 @@
   if (/Apple/.test(navigator.vendor || "")) {
     document.documentElement.classList.add("is-webkit");
   }
+
+  /* РАУНД 46: на тач-устройствах хедер — position:sticky (см. html.touch-nav в конце
+     main.css). И top=scrollY из syncTop() (РАУНД 28), и position:fixed (РАУНД 45) на iPhone
+     дёргались: первый отстаёт от прокрутки пальцем, второй Safari в iOS 26 сам сдвигает на
+     несколько px, пока сворачивает панель с адресом (WebKit bug 297779). sticky — часть
+     обычного потока, браузер прокручивает его вместе со страницей. Для этого хедер должен
+     стоять в начале <body> (sticky держится, только пока родитель на экране, а в конце body
+     он бы "прилип" лишь в самом низу страницы) — переносим его туда. Порядок в разметке
+     был нужен только для блендинга без z-index (комментарий у .hero-nav в main.css), а на
+     тач-устройствах блендинга нет, z-index есть. Здесь, а не в основном IIFE: тот выходит
+     раньше при prefers-reduced-motion, а перенос нужен всегда. Медиа-запрос — тот же, что
+     у курсора (cursor.js). */
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+    document.documentElement.classList.add("touch-nav");
+    var nav = document.querySelector(".hero-nav");
+    if (nav) document.body.insertBefore(nav, document.body.firstChild);
+  }
 })();
 
 (function () {
@@ -197,14 +214,9 @@
   updateNavHeight();
   window.addEventListener("resize", updateNavHeight);
 
-  /* РАУНД 45: на тач-устройствах (телефоны/планшеты) хедер дёргался при скролле — палец
-     крутит страницу на стороне браузера, мимо JS, и top=scrollY из syncTop() отстаёт от
-     реальной прокрутки на кадр-другой (особенно при инерции и "резинке" у края на iOS).
-     Там хедер — обычный position:fixed (см. @media (hover: none), (pointer: coarse) в конце
-     main.css), его держит сам браузер, syncTop не нужен. Маску-инверсию это не ломает — на
-     тач-устройствах она выключена (там тот же чёрный хедер, что и в WebKit). Медиа-запрос —
-     тот же, что у курсора (cursor.js). */
-  var isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  /* РАУНД 45-46: на тач-устройствах хедер — position:sticky (см. IIFE с is-webkit выше),
+     его держит сам браузер, syncTop там не нужен. */
+  var isTouch = document.documentElement.classList.contains("touch-nav");
 
   function syncTop() {
     nav.style.top = window.scrollY + "px";

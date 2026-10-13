@@ -1411,41 +1411,50 @@ html.mobile-menu-open body {
   }
 }
 
-/* ===== РАУНД 45: хедер на тач-устройствах — обычный position:fixed =====
-   На телефоне хедер дёргался при скролле: top=scrollY из js/nav.js (syncTop) отстаёт от
-   прокрутки пальцем, которую браузер ведёт сам, мимо JS. Здесь хедер держит сам браузер —
-   position:fixed, а nav.js на таких устройствах syncTop не запускает (тот же медиа-запрос).
-   fixed изолирует mix-blend-mode (см. комментарий у .hero-nav) — поэтому маска-инверсия тут
-   выключена и хедер чёрный, как уже было в WebKit (html.is-webkit выше), т.е. на iPhone
-   внешне ничего не меняется. Скрытие при скролле вниз — через transform, а не margin-top:
-   урок РАУНДА 18 (transform ломает блендинг) здесь не действует, блендинга нет, а transform
-   анимируется плавнее, без пересчёта раскладки на каждом кадре. */
-@media (hover: none), (pointer: coarse) {
-  .hero-nav {
-    position: fixed;
-    top: 0 !important; /* на случай, если inline top остался от syncTop */
-    margin-top: 0;
-    transition: transform 0.4s ease;
-  }
-  .hero-nav.nav-hidden {
-    margin-top: 0;
-    transform: translateY(-130%);
-  }
+/* ===== РАУНД 45-46: хедер на тач-устройствах — position:sticky =====
+   На телефоне хедер дёргался при скролле. РАУНД 45 — top=scrollY из js/nav.js (syncTop)
+   отстаёт от прокрутки пальцем, которую браузер ведёт сам, мимо JS. РАУНД 46 — position:fixed
+   тоже не помог: Safari в iOS 26 сдвигает fixed-элементы на несколько px, пока сворачивает
+   панель с адресом (WebKit bug 297779), и хедер уезжал под часы. sticky — часть обычного
+   потока, браузер прокручивает его вместе со страницей без отдельного пересчёта.
+   Класс html.touch-nav ставит js/nav.js (медиа-запрос (hover: none), (pointer: coarse)), он же
+   переносит <header> в начало <body> — sticky работает только там, см. комментарий в nav.js.
+   Маска-инверсия тут выключена (блендинг на тач-устройствах не нужен — на iPhone его и так не
+   было, см. html.is-webkit выше), поэтому хедеру можно дать z-index — поверх .skills-canvas/
+   .case-canvas (z-index:0), ниже курсора (9999) и мобильного меню (10000).
+   Скрытие при скролле вниз — через transform, а не margin-top: урок РАУНДА 18 (transform
+   ломает блендинг) здесь не действует, а transform анимируется плавнее. */
+html.touch-nav .hero-nav {
+  position: sticky;
+  top: 0 !important; /* inline top от syncTop тут не нужен — на всякий случай перебиваем */
+  left: auto;
+  right: auto;
+  z-index: 100;
+  /* в потоке body ширина и так уже за вычетом его боковых отступов */
+  width: auto;
+  /* отрицательный низ — хедер не занимает места в потоке: .hero/.case-wrap по-прежнему
+     сами отступают сверху на его высоту (padding-top с --nav-h), раскладка не меняется */
+  margin: 0 auto calc(var(--nav-h, 110px) * -1);
+  transition: transform 0.4s ease;
+}
+html.touch-nav .hero-nav.nav-hidden {
+  margin-top: 0;
+  transform: translateY(-130%);
+}
 
-  .logo-text-img {
-    mix-blend-mode: normal;
-    filter: none; /* исходный SVG лого чёрный — invert(1) делал его белым для difference */
-  }
-  .nav-links a,
-  .nav-links a::after,
-  .nav-menu-toggle {
-    mix-blend-mode: normal;
-  }
-  .nav-links a,
-  .nav-menu-toggle {
-    color: #000;
-  }
-  .nav-links a::after {
-    background: #000;
-  }
+html.touch-nav .logo-text-img {
+  mix-blend-mode: normal;
+  filter: none; /* исходный SVG лого чёрный — invert(1) делал его белым для difference */
+}
+html.touch-nav .nav-links a,
+html.touch-nav .nav-links a::after,
+html.touch-nav .nav-menu-toggle {
+  mix-blend-mode: normal;
+}
+html.touch-nav .nav-links a,
+html.touch-nav .nav-menu-toggle {
+  color: #000;
+}
+html.touch-nav .nav-links a::after {
+  background: #000;
 }
