@@ -362,10 +362,18 @@ html.is-webkit .nav-links a::after {
 }
 
 /* --- заголовок --- */
+/* margin: auto по вертикали — тот же приём, что на мобильном (см. @media max-width:480px):
+   на высоких мониторах заголовок встаёт по центру свободного места, а блок с фото и цифрами
+   (.hero-bottom) прижимается к низу первого экрана, вместо того чтобы всё собиралось сверху
+   и под ним оставалась пустота. На обычных ноутбуках свободного места нет — margin = 0,
+   раскладка не меняется. flex-shrink: 0 — чтобы flex не сжимал заголовок, строки внутри
+   спозиционированы в % от его высоты. */
 .hero-headline {
   position: relative;
   width: 100%;
   height: clamp(320px, 44vw, 599px);
+  margin: auto 0;
+  flex-shrink: 0;
 }
 
 .hero-star {
@@ -1400,5 +1408,44 @@ html.mobile-menu-open body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ===== РАУНД 45: хедер на тач-устройствах — обычный position:fixed =====
+   На телефоне хедер дёргался при скролле: top=scrollY из js/nav.js (syncTop) отстаёт от
+   прокрутки пальцем, которую браузер ведёт сам, мимо JS. Здесь хедер держит сам браузер —
+   position:fixed, а nav.js на таких устройствах syncTop не запускает (тот же медиа-запрос).
+   fixed изолирует mix-blend-mode (см. комментарий у .hero-nav) — поэтому маска-инверсия тут
+   выключена и хедер чёрный, как уже было в WebKit (html.is-webkit выше), т.е. на iPhone
+   внешне ничего не меняется. Скрытие при скролле вниз — через transform, а не margin-top:
+   урок РАУНДА 18 (transform ломает блендинг) здесь не действует, блендинга нет, а transform
+   анимируется плавнее, без пересчёта раскладки на каждом кадре. */
+@media (hover: none), (pointer: coarse) {
+  .hero-nav {
+    position: fixed;
+    top: 0 !important; /* на случай, если inline top остался от syncTop */
+    margin-top: 0;
+    transition: transform 0.4s ease;
+  }
+  .hero-nav.nav-hidden {
+    margin-top: 0;
+    transform: translateY(-130%);
+  }
+
+  .logo-text-img {
+    mix-blend-mode: normal;
+    filter: none; /* исходный SVG лого чёрный — invert(1) делал его белым для difference */
+  }
+  .nav-links a,
+  .nav-links a::after,
+  .nav-menu-toggle {
+    mix-blend-mode: normal;
+  }
+  .nav-links a,
+  .nav-menu-toggle {
+    color: #000;
+  }
+  .nav-links a::after {
+    background: #000;
   }
 }

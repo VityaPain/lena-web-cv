@@ -197,11 +197,20 @@
   updateNavHeight();
   window.addEventListener("resize", updateNavHeight);
 
+  /* РАУНД 45: на тач-устройствах (телефоны/планшеты) хедер дёргался при скролле — палец
+     крутит страницу на стороне браузера, мимо JS, и top=scrollY из syncTop() отстаёт от
+     реальной прокрутки на кадр-другой (особенно при инерции и "резинке" у края на iOS).
+     Там хедер — обычный position:fixed (см. @media (hover: none), (pointer: coarse) в конце
+     main.css), его держит сам браузер, syncTop не нужен. Маску-инверсию это не ломает — на
+     тач-устройствах она выключена (там тот же чёрный хедер, что и в WebKit). Медиа-запрос —
+     тот же, что у курсора (cursor.js). */
+  var isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
   function syncTop() {
     nav.style.top = window.scrollY + "px";
     requestAnimationFrame(syncTop);
   }
-  requestAnimationFrame(syncTop);
+  if (!isTouch) requestAnimationFrame(syncTop);
 
   var lastY = window.scrollY;
   var hidden = false;
@@ -211,16 +220,21 @@
     nav.classList.toggle("nav-hidden", hidden);
   }
 
+  // РАУНД 45: направление меняем только после сдвига больше порога — иначе мелкие
+  // откаты прокрутки (инерция, "резинка" на iOS, дрожание пальца) заставляли хедер
+  // мигать туда-обратно
+  var DIR_THRESHOLD = 8;
+
   function onScroll() {
     var y = window.scrollY;
     if (y <= nav.offsetHeight) {
       // у самого верха страницы хедер всегда виден
       setHidden(false);
-    } else if (y > lastY) {
-      setHidden(true); // скроллим вниз — прячем
-    } else if (y < lastY) {
-      setHidden(false); // скроллим вверх — показываем
+      lastY = y;
+      return;
     }
+    if (Math.abs(y - lastY) < DIR_THRESHOLD) return; // копим сдвиг, lastY не трогаем
+    setHidden(y > lastY); // вниз — прячем, вверх — показываем
     lastY = y;
   }
   window.addEventListener("scroll", onScroll, { passive: true });
