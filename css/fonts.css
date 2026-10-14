@@ -42,7 +42,7 @@
 }
 
 /* Neue Haas Grotesk Display Pro — заголовки секций ("работы", "обо мне") и вступительный текст блока "обо мне" */
-/* РАУНД 11: Лена прислала Medium (65) взамен Roman (55) — используем Medium везде, где подключен этот шрифт */
+/* файл — начертание Medium (65), но объявлено как weight 400: используется вместо Roman (55) */
 @font-face {
   font-family: "Neue Haas Grotesk Display Pro";
   src: url("../fonts/neue-haas/Neue-Haas-Grotesk-Display-Pro-65-Medium.otf") format("opentype");

@@ -1,12 +1,5 @@
-/* ===== экран загрузки (РАУНД 36, нода Figma 217:10764 — гифка кота + "Loading...") =====
-   Полноэкранный оверлей показывается сразу при открытии ЛЮБОЙ страницы сайта — он уже виден
-   через чистый CSS (.loading-screen, см. main.css), без ожидания этого скрипта, поэтому даже
-   если JS подгрузится с задержкой, мигания "голого" контента не будет.
-
-   Прячется после того, как страница полностью загрузилась (window.load — дождались картинок
-   и шрифтов) И прошло минимальное время показа (чтобы кот не мелькал на долю секунды при
-   быстрой загрузке с кэшем — тогда анимацию никто не увидит). FALLBACK — защита на случай,
-   если какой-то ресурс так и не догрузится: оверлей не должен зависнуть навсегда. */
+/* Экран загрузки: виден сразу через CSS, прячется после window.load, но не раньше MIN_VISIBLE
+   (чтобы не мелькал из кэша); FALLBACK — на случай, если какой-то ресурс не догрузится. */
 (function () {
   "use strict";
 
@@ -25,15 +18,13 @@
     hidden = true;
     screen.classList.add("is-hidden");
     document.body.classList.remove("is-loading");
-    // РАУНД 43: сигнал для js/nav.js — заголовок на главной должен "набираться" сам
-    // (scramble), но только когда экран загрузки реально исчез, а не пока гифка
-    // всё ещё его закрывает (см. комментарий у .hero-headline в nav.js).
+    // сигнал для nav.js — запустить scramble заголовка
     document.dispatchEvent(new CustomEvent("loader:hidden"));
     screen.addEventListener("transitionend", function onEnd() {
       screen.removeEventListener("transitionend", onEnd);
       screen.hidden = true;
     });
-    // на случай, если transitionend не придёт (prefers-reduced-motion отключает transition и т.п.)
+    // если transitionend не придёт (например, при reduced-motion)
     setTimeout(function () {
       screen.hidden = true;
     }, 700);

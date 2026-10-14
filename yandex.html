@@ -75,11 +75,6 @@
       </div>
 
       <div class="case-canvas case-canvas--yandex">
-        <!-- РАУНД 32: каждая пара фото+метаданные обёрнута в .case-card-group — мобильная
-           обёртка для Yandex (нода 130:10472), тот же приём, что .case-gallery у Young Con:
-           display:contents на десктопе (разметка не видна в раскладке, фото/метаданные
-           позиционируются абсолютно от .case-canvas как раньше), настоящий flex-столбец
-           с gap:20px на мобильном (см. case.css). -->
 
         <!-- Промо-баннеры | Яндекс Маркет -->
         <div class="case-card-group">
@@ -127,8 +122,6 @@
             style="left: 60.956%; top: 26.962%; width: 34.853%"
           >
             <div class="case-card-divider"></div>
-            <!-- РАУНД 47: --wide — на мобильном заголовок во всю ширину, ниже в одну
-               строку "ссылка" и теги (см. case.css) -->
             <div class="case-card-row case-card-row--wide">
               <div class="case-card-title">
                 Подкаст «Доверительный интервал» | 10 выпусков
@@ -217,8 +210,6 @@
                   <img src="assets/figma/icon-arrow-back.svg" alt="" />
                 </a>
               </div>
-              <!-- РАУНД 47: --rows — на мобильном группы строками друг под другом, прижаты
-                 вправо: "иллюстрация", ниже "стикеры инфографика" (см. case.css) -->
               <div class="case-card-tags case-card-tags--rows">
                 <div class="case-card-tag-single">иллюстрация</div>
                 <div class="case-card-tag-group case-card-tag-group--flat">
@@ -411,21 +402,17 @@
         var slides = wrap.querySelectorAll("img[data-slide]");
         var idx = 0;
         // dir: 1 — «вперёд» (новый слайд въезжает справа, старый уходит влево), -1 — наоборот.
-        // Сама анимация (transition) — в case.css у .case-carousel img[data-slide].
         // transform ставим с "important" — иначе на мобильном его перебивают !important из case.css.
         function show(i, dir) {
           var next = (i + slides.length) % slides.length;
           if (next === idx) return;
           var incoming = slides[next];
           var outgoing = slides[idx];
-          // новый слайд мгновенно ставим за край с нужной стороны (без анимации)...
           incoming.style.transition = "none";
           incoming.style.setProperty("transform", "translateX(" + dir * 100 + "%)", "important");
-          incoming.offsetWidth; // принудительный пересчёт, чтобы стартовая позиция применилась
-          // ...и отпускаем: .active (transform:none) плавно доводит его на место
+          incoming.offsetWidth; // принудительный пересчёт — стартовая позиция применится до анимации
           incoming.style.transition = "";
           incoming.style.removeProperty("transform");
-          // старый уезжает целиком за противоположный край
           outgoing.style.setProperty("transform", "translateX(" + -dir * 100 + "%)", "important");
           idx = next;
           slides.forEach(function (img, n) {
@@ -444,13 +431,7 @@
       })();
     </script>
 
-    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
-       визуально на странице) — технический приём, не визуальный. Подробности в
-       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
-       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
-       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
-       иначе они будут рисоваться поверх него при скролле — порядок покраски для
-       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <!-- хедер намеренно в конце <body>: без z-index (ломает mix-blend-mode) он должен идти в разметке после секций с z-index — см. .hero-nav в main.css -->
     <header class="hero-nav">
       <a href="index.html#top" class="logo">
         <img

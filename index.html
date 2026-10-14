@@ -9,9 +9,8 @@
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/main.css" />
   </head>
-  <body>
-    <!-- РАУНД 36: экран загрузки — см. комментарий у .loading-screen в main.css и js/loader.js.
-       Виден сразу (чистый CSS, не ждёт JS), прячется сам после полной загрузки страницы. -->
+  <body class="page-home">
+    <!-- экран загрузки -->
     <div class="loading-screen" id="loading-screen" aria-hidden="true">
       <div class="loading-screen-inner">
         <img
@@ -26,8 +25,7 @@
     <!-- первый экран -->
     <section id="top" class="hero">
       <div class="hero-headline">
-        <!-- РАУНД 29: настоящий текст для скринридеров — один источник, т.к. ниже тот же текст
-           показан визуально дважды (десктопная/мобильная разбивка на строки, см. main.css). -->
+        <!-- текст для скринридеров (визуально он дублируется ниже) -->
         <h1 class="sr-only">
           Графический и web дизайнер: от бренда с нуля до феста для десяти тысяч
           человек, и не только :)
@@ -291,13 +289,7 @@
       </footer>
     </div>
 
-    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
-       визуально на странице) — технический приём, не визуальный. Подробности в
-       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
-       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
-       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
-       иначе они будут рисоваться поверх него при скролле — порядок покраски для
-       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <!-- хедер намеренно в конце <body>: без z-index (ломает mix-blend-mode) он должен идти в разметке после секций с z-index — см. .hero-nav в main.css -->
     <header class="hero-nav">
       <a href="#top" class="logo">
         <img

@@ -73,12 +73,7 @@
       </div>
 
       <div class="case-canvas case-canvas--young-con">
-        <!-- (1) наружная реклама + главное фото.
-           РАУНД 31: .case-gallery — обёртка для мобильного Figma-макета Young Con (нода 130:10380).
-           На десктопе она display:contents (см. case.css) — исчезает из раскладки, и .case-photo/
-           .case-caption внутри позиционируются абсолютно от .case-canvas как и раньше, один в один
-           со старой версией. На мобильном это настоящий flex-столбец с собственным gap под каждую
-           галерею (цифры — из Dev Mode, у каждой галереи свой зазор между подписью и фото). -->
+        <!-- (1) наружная реклама + главное фото -->
         <div class="case-gallery case-gallery--1">
           <div class="case-caption" style="left: 0%; top: 0%; width: 42.5%">
             <span class="case-caption-num">(1)</span>
@@ -97,11 +92,7 @@
           </div>
         </div>
 
-        <!-- (2) экраны сцен — на мобильном 6 фото идут не одно под другим, а тремя парами
-           (см. .case-photo-pair в case.css), порядок пар по Dev Mode: (scene-1+scene-2),
-           (scene-6+scene-3), (scene-4+scene-5) — то есть эко-баннер (scene-6) на мобильном
-           встаёт между scene-2 и scene-3, не в конце списка, как на десктопе. На сам десктоп-
-           коллаж порядок в разметке не влияет (там всё строго по left/top/width/height). -->
+        <!-- (2) экраны сцен -->
         <div class="case-gallery case-gallery--2">
           <div
             class="case-caption"
@@ -236,9 +227,7 @@
           </div>
         </div>
 
-        <!-- (4) баннеры хедлайнеров — на мобильном не пара в ряд, а смещённая сетка (широкий
-           портрет слева на всю высоту, пейзажный кадр справа по центру высоты) — см.
-           .case-photo-offset, цифры (151/226, 174/116, зазор 24px) из Dev Mode. -->
+        <!-- (4) баннеры хедлайнеров -->
         <div class="case-gallery case-gallery--4">
           <div
             class="case-caption"
@@ -338,13 +327,7 @@
       </footer>
     </div>
 
-    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
-       визуально на странице) — технический приём, не визуальный. Подробности в
-       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
-       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
-       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
-       иначе они будут рисоваться поверх него при скролле — порядок покраски для
-       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <!-- хедер намеренно в конце <body>: без z-index (ломает mix-blend-mode) он должен идти в разметке после секций с z-index — см. .hero-nav в main.css -->
     <header class="hero-nav">
       <a href="index.html#top" class="logo">
         <img

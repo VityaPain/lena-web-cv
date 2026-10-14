@@ -76,16 +76,10 @@
       </div>
 
       <div class="case-canvas case-canvas--thothex">
-        <!-- РАУНД 33: мудборд-мерч (9 фото) — на десктопе каждое фото абсолютно
-           спозиционировано по своим left/top/width/height, как раньше; .case-card-group/
-           .case-merch-gallery/.case-merch-row — те же обёртки display:contents, что и у
-           .case-gallery (Young Con) / .case-card-group (Yandex): на мобильном (нода
-           130:10072, Dev Mode) это аккуратная сетка 2+3+2+2, на десктопе — невидимые
-           обёртки, раскладка не меняется. -->
+        <!-- мудборд мерча -->
         <div class="case-card-group case-card-group--gallery">
           <div class="case-merch-gallery">
             <div class="case-merch-row case-merch-row--2">
-              <!-- мудборд: 14 47 -->
               <div
                 class="case-photo"
                 style="left: 0%; top: 0%; width: 18.824%; height: 12.981%"
@@ -95,7 +89,6 @@
                   alt="Thothex — мудборд мерча"
                 />
               </div>
-              <!-- мудборд: 14 48 (большая карточка) -->
               <div
                 class="case-photo"
                 style="left: 20.294%; top: 0%; width: 39.118%; height: 26.76%"
@@ -108,7 +101,6 @@
             </div>
 
             <div class="case-merch-row case-merch-row--3">
-              <!-- мудборд: 14 50 -->
               <div
                 class="case-photo"
                 style="left: 60.882%; top: 0%; width: 18.824%; height: 12.981%"
@@ -118,7 +110,6 @@
                   alt="Thothex — мудборд мерча"
                 />
               </div>
-              <!-- мудборд: 14 51 -->
               <div
                 class="case-photo"
                 style="left: 0%; top: 13.765%; width: 18.824%; height: 12.981%"
@@ -128,7 +119,6 @@
                   alt="Thothex — мудборд мерча"
                 />
               </div>
-              <!-- мудборд: 14 49 -->
               <div
                 class="case-photo"
                 style="left: 81.176%; top: 0%; width: 18.824%; height: 12.981%"
@@ -141,7 +131,6 @@
             </div>
 
             <div class="case-merch-row case-merch-row--2">
-              <!-- мерч thothex: 14 52 (большая карточка, подпись) -->
               <div
                 class="case-photo"
                 style="
@@ -156,7 +145,6 @@
                   alt="Мерч thothex — дизайн футболок"
                 />
               </div>
-              <!-- мудборд: 4_3-2 2 -->
               <div
                 class="case-photo"
                 style="
@@ -174,7 +162,6 @@
             </div>
 
             <div class="case-merch-row case-merch-row--2 case-merch-row--tall">
-              <!-- мудборд: 4_3-1 2 -->
               <div
                 class="case-photo"
                 style="left: 0%; top: 27.51%; width: 18.824%; height: 12.181%"
@@ -184,7 +171,6 @@
                   alt="Thothex — мудборд мерча"
                 />
               </div>
-              <!-- мудборд: 4_3 2 -->
               <div
                 class="case-photo"
                 style="
@@ -231,10 +217,7 @@
           </div>
         </div>
 
-        <!-- приложение Thothex visiom: на мобильном (Dev Mode) показаны только 4 из 5 экранов
-           десктопа (2 ряда по 2) — app-5 (молекулярный редактор) в мобильный макет не вошёл,
-           поэтому остаётся вне .case-merch-row и скрывается на ≤480 через .case-mobile-hide,
-           не теряя своего места на десктопе. -->
+        <!-- приложение Thothex visiom (app-5 скрыт на мобильном) -->
         <div class="case-card-group case-card-group--gallery">
           <div class="case-merch-gallery case-merch-gallery--visiom">
             <div class="case-merch-row case-merch-row--2">
@@ -334,8 +317,6 @@
             style="left: 10.147%; top: 89.76%; width: 39.118%"
           >
             <div class="case-card-divider"></div>
-            <!-- РАУНД 52: --tags-top — на мобильном теги прижаты к правому верхнему углу
-               поверх строки, заголовок не сжимается до ширины всего блока тегов (см. case.css) -->
             <div class="case-card-row case-card-row--tags-top">
               <div class="case-card-title">
                 веб-приложение Thothex Hackathon
@@ -374,8 +355,6 @@
             style="left: 60.882%; top: 93.51%; width: 39.118%"
           >
             <div class="case-card-divider"></div>
-            <!-- РАУНД 52: --tags-top — на мобильном теги прижаты к правому верхнему углу
-               поверх строки, заголовок не сжимается до ширины всего блока тегов (см. case.css) -->
             <div class="case-card-row case-card-row--tags-top">
               <div class="case-card-title">
                 баннеры для хакатонов и постов
@@ -390,9 +369,6 @@
                 </a>
               </div>
               <div class="case-card-tags">
-                <!-- РАУНД 47: группы-колонки 2×2 (на десктопе — сетка справа), порядок по
-                   скриншоту Лены: ai/баннеры в первой строке, иллюстрация/айдентика во второй.
-                   На мобильном — так же справа, начиная с уровня заголовка (--tags-top) -->
                 <div class="case-card-tag-group">
                   <span>ai</span><span>иллюстрация</span>
                 </div>
@@ -452,13 +428,7 @@
       </footer>
     </div>
 
-    <!-- РАУНД 28: хедер намеренно вынесен сюда, в самый конец <body> (не там, где он
-       визуально на странице) — технический приём, не визуальный. Подробности в
-       комментарии у .hero-nav в main.css: прилипающий/скрывающийся при скролле хедер
-       (position:absolute, БЕЗ z-index — z-index ломает mix-blend-mode, см. комментарий)
-       должен идти в разметке ПОСЛЕ секций со своим z-index (.skills-canvas/.case-canvas),
-       иначе они будут рисоваться поверх него при скролле — порядок покраски для
-       position:absolute элементов без z-index решает именно разметка, не CSS-позиция. -->
+    <!-- хедер намеренно в конце <body>: без z-index (ломает mix-blend-mode) он должен идти в разметке после секций с z-index — см. .hero-nav в main.css -->
     <header class="hero-nav">
       <a href="index.html#top" class="logo">
         <img

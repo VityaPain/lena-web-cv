@@ -1,12 +1,9 @@
-/* ===== кастомный курсор (референс klyuse.com) =====
-   маленькая точка 9x9px, голубая (--color-accent), плавно следует за курсором (lerp),
-   увеличивается на кликабельных элементах (ссылки, кнопки, шарики в блоке "типы проектов").
-   на тач-устройствах (нет реального курсора) — не создаётся вообще. */
+/* Кастомный курсор: точка с плавным следованием (lerp), увеличивается на кликабельном.
+   На тач-устройствах не создаётся. */
 (function () {
   "use strict";
 
-  // всегда даём безопасную no-op заглушку — её могут дёргать другие скрипты
-  // (например canvas с шариками, где обычный closest() не сработает)
+  // no-op заглушка всегда — её вызывают другие скрипты (например, canvas с шариками)
   window.__setCursorBig = window.__setCursorBig || function () {};
 
   if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
@@ -71,7 +68,7 @@
     "mouseout",
     function (e) {
       if (e.target && e.target.closest && e.target.closest(HOVER_SELECTOR)) {
-        // не снимаем состояние, если ушли на другой кликабельный элемент внутри того же родителя
+        // перешли на другой кликабельный элемент — не уменьшаем
         var to = e.relatedTarget;
         if (to && to.closest && to.closest(HOVER_SELECTOR)) return;
         window.__setCursorBig(false);
