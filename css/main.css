@@ -1445,11 +1445,19 @@ html.touch-nav .hero-nav {
   /* отрицательный низ — хедер не занимает места в потоке: .hero/.case-wrap по-прежнему
      сами отступают сверху на его высоту (padding-top с --nav-h), раскладка не меняется */
   margin: 0 auto calc(var(--nav-h, 110px) * -1);
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease, visibility 0s linear 0s;
 }
+/* РАУНД 51: в iOS 26 Safari строка состояния (часы/батарея) прозрачная — сквозь неё видно
+   страницу ВЫШЕ края экрана. Хедер, уехавший вверх на свою высоту, оказывался ровно в этой
+   полосе и просвечивал размытым за часами. Поэтому при скрытии он ещё и гаснет (opacity), а
+   visibility:hidden после окончания анимации (задержка 0.4s) — чтобы невидимый хедер не
+   ловил нажатия. При появлении visibility возвращается сразу (задержка 0s в правиле выше). */
 html.touch-nav .hero-nav.nav-hidden {
   margin-top: 0;
   transform: translateY(-130%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.4s ease, opacity 0.4s ease, visibility 0s linear 0.4s;
 }
 
 html.touch-nav .logo-text-img {
