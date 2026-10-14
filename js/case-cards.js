@@ -82,7 +82,7 @@
 (function () {
   "use strict";
 
-  var desktop = window.matchMedia("(min-width: 861px)");
+  var desktop = window.matchMedia("(min-width: 1101px)");
 
   function insetOutro(page, arrowGap) {
     var canvas = document.querySelector(".case-canvas--" + page);
@@ -125,7 +125,8 @@
    карточки «баннеры» справа) до итогового текста — ровно GAP px. Под ним в коллаже остаётся
    пустое место (высота коллажа в %, подпись в px), его и вычитаем, плюс flex-gap самого
    .case-wrap (19px). Как и у Yandex выше — offsetTop/offsetHeight, не зависят от transform
-   анимации выезда. Только >860px: ниже коллаж — обычный список, отступ из CSS. */
+   анимации выезда. Только >1100px (РАУНД 54: было >860 — до 1100 теперь планшетная раскладка без
+   коллажа, см. case.css): ниже коллаж — обычный список, отступ из CSS. */
 (function () {
   "use strict";
 
@@ -135,7 +136,7 @@
   if (!canvas || !note) return;
 
   var items = canvas.querySelectorAll(".case-photo, .case-card-meta");
-  var desktop = window.matchMedia("(min-width: 861px)");
+  var desktop = window.matchMedia("(min-width: 1101px)");
 
   function align() {
     if (!desktop.matches) {

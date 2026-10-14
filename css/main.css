@@ -365,21 +365,26 @@ html.is-webkit .nav-links a::after {
 /* margin: auto по вертикали — тот же приём, что на мобильном (см. @media max-width:480px):
    на высоких мониторах заголовок встаёт по центру свободного места, а блок с фото и цифрами
    (.hero-bottom) прижимается к низу первого экрана, вместо того чтобы всё собиралось сверху
-   и под ним оставалась пустота. На обычных ноутбуках свободного места нет — margin = 0,
-   раскладка не меняется. flex-shrink: 0 — чтобы flex не сжимал заголовок, строки внутри
-   спозиционированы в % от его высоты. */
+   и под ним оставалась пустота. На обычных ноутбуках свободного места нет — margin = 0.
+   РАУНД 55: на невысоких экранах (ноутбук ~1500×825) заголовок, наоборот, сжимается (обычный
+   flex-shrink), чтобы фото и цифры не уезжали за нижний край первого экрана — раньше тут стоял
+   flex-shrink:0, и нижний блок обрезался. Чтобы при сжатии строки не наезжали друг на друга,
+   они расставлены не в % от высоты, а от центра (56.59%) с шагом в размер шрифта (--hero-fs,
+   line-height 1) — на высоте 599px это ровно прежние 43.24/56.59/69.95% из Figma. min-height —
+   чтобы в блок всегда помещались звёздочка, три строки и подпись. */
 .hero-headline {
+  --hero-fs: clamp(30px, 5.88vw, 80px);
   position: relative;
   width: 100%;
   height: clamp(320px, 44vw, 599px);
+  min-height: calc(var(--hero-fs) * 3.6);
   margin: auto 0;
-  flex-shrink: 0;
 }
 
 .hero-star {
   position: absolute;
   left: 11.8%;
-  top: 41.4%;
+  top: calc(56.59% - var(--hero-fs) * 1.1375); /* = 41.4% при высоте 599 и шрифте 80 */
   width: 21px;
   height: 21px;
 }
@@ -396,7 +401,7 @@ html.is-webkit .nav-links a::after {
   position: absolute;
   display: block;
   font-family: "Panama", serif;
-  font-size: clamp(30px, 5.88vw, 80px);
+  font-size: var(--hero-fs);
   line-height: 1;
   letter-spacing: -0.0695em;
   text-transform: uppercase;
@@ -408,7 +413,7 @@ html.is-webkit .nav-links a::after {
 .hero-line:nth-of-type(1) {
   left: 14.49%;
   right: 17.72%;
-  top: 43.24%;
+  top: calc(56.59% - var(--hero-fs));
 }
 
 .hero-line:nth-of-type(2) {
@@ -420,13 +425,13 @@ html.is-webkit .nav-links a::after {
 .hero-line:nth-of-type(3) {
   left: 18.31%;
   right: 20.37%;
-  top: 69.95%;
+  top: calc(56.59% + var(--hero-fs));
 }
 
 .hero-accent {
   position: absolute;
   right: 9.3%;
-  top: 69.45%;
+  top: calc(56.59% + var(--hero-fs) * 0.9625); /* = 69.45% при высоте 599 и шрифте 80 */
   transform: translateY(-50%);
   font-family: "GT America Mono", monospace;
   font-size: 16px;
@@ -898,7 +903,8 @@ html.is-webkit .nav-links a::after {
   }
 }
 
-/* ===== mobile fallback (без макета в Figma — своя адаптация) ===== */
+/* ===== mobile fallback (без макета в Figma — своя адаптация) — общее для телефона и планшета;
+   первый экран и строки работ телефона — в блоке ≤480 ниже (РАУНД 54) ===== */
 @media (max-width: 860px) {
   .hero-nav {
     flex-wrap: wrap;
@@ -908,64 +914,8 @@ html.is-webkit .nav-links a::after {
     gap: 20px;
   }
 
-  .hero-headline {
-    height: auto;
-    padding: 48px 0 24px;
-  }
-  .hero-star {
-    display: none;
-  }
-  .hero-line {
-    position: static;
-    display: block;
-    transform: none;
-    font-size: clamp(28px, 9vw, 40px);
-    white-space: normal;
-  }
-  .hero-accent {
-    position: static;
-    display: block;
-    transform: none;
-    text-align: left;
-    margin-top: 12px;
-  }
-
   .hero-bottom {
-    flex-wrap: wrap;
     gap: 24px;
-  }
-  .hero-stats {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  /* --- работы --- */
-  .work-row {
-    flex-wrap: wrap;
-  }
-  .work-info {
-    flex: 1 1 100%;
-    order: 1;
-    gap: 12px;
-  }
-  .work-image {
-    order: 2;
-    flex: 1 1 100%;
-  }
-  .work-image--wide,
-  .work-image--square {
-    flex-basis: 100%;
-  }
-  .work-meta {
-    order: 3;
-    flex: 1 1 100%;
-    align-items: flex-start;
-    text-align: left;
-    margin-top: 12px;
-  }
-  .work-facts,
-  .work-tags {
-    align-items: flex-start;
   }
 
   /* --- типы проектов ---
@@ -1004,6 +954,71 @@ html.is-webkit .nav-links a::after {
     justify-content: flex-start;
     gap: 20px;
     flex-wrap: wrap;
+  }
+}
+
+/* ===== РАУНД 54: то, что раньше было в общей адаптации ≤860 выше, но нужно только телефону:
+   на планшете (481–860) первый экран — десктопная "лесенка" заголовка, а строки работ — своя
+   раскладка (блок РАУНДА 54 в конце файла). Перенесено как было, только под ≤480 — мобильная
+   вёрстка не меняется (основной мобильный блок ниже их всё равно уточняет). */
+@media (max-width: 480px) {
+  .hero-headline {
+    height: auto;
+    padding: 48px 0 24px;
+  }
+  .hero-star {
+    display: none;
+  }
+  .hero-line {
+    position: static;
+    display: block;
+    transform: none;
+    font-size: clamp(28px, 9vw, 40px);
+    white-space: normal;
+  }
+  .hero-accent {
+    position: static;
+    display: block;
+    transform: none;
+    text-align: left;
+    margin-top: 12px;
+  }
+
+  .hero-bottom {
+    flex-wrap: wrap;
+  }
+  .hero-stats {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* --- работы --- */
+  .work-row {
+    flex-wrap: wrap;
+  }
+  .work-info {
+    flex: 1 1 100%;
+    order: 1;
+    gap: 12px;
+  }
+  .work-image {
+    order: 2;
+    flex: 1 1 100%;
+  }
+  .work-image--wide,
+  .work-image--square {
+    flex-basis: 100%;
+  }
+  .work-meta {
+    order: 3;
+    flex: 1 1 100%;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 12px;
+  }
+  .work-facts,
+  .work-tags {
+    align-items: flex-start;
   }
 }
 
@@ -1475,4 +1490,92 @@ html.touch-nav .nav-menu-toggle {
 }
 html.touch-nav .nav-links a::after {
   background: #000;
+}
+
+/* ===== РАУНД 54: планшет (481–860px) и узкий десктоп =====
+   "и не только :)" на десктопе стоит справа вплотную к концу третьей строки заголовка. Строки
+   масштабируются от ширины экрана (font-size в vw), а подпись — 16px, и как только колонка
+   контента уже полных 1360px (экран меньше 1440px), она наезжает на "ЧЕЛОВЕК" (проверено
+   замером: 1366 — на 37px, 1280 — сильнее). На экранах до 1439px подпись — под третьей строкой,
+   правым краем по её концу (right — тот же 20.37%, что у .hero-line:nth-of-type(3)). */
+@media (min-width: 481px) and (max-width: 1439px) {
+  /* звёздочка — на том же расстоянии от начала первой строки, что на десктопе 1360px
+     (37px: 14.49% − 11.8% от 1360), а не 11.8% от ширины — на планшете она касалась "Г" */
+  .hero-star {
+    left: calc(14.49% - 37px);
+  }
+  .hero-accent {
+    right: 20.37%;
+    top: calc(56.59% + var(--hero-fs) * 1.9); /* под третьей строкой */
+    font-size: clamp(12px, 1.4vw, 16px);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 860px) {
+  /* первый экран — та же "лесенка" строк, что на десктопе (без переопределений: размеры и
+     позиции строк там уже в % и vw), отдельно ничего не нужно. */
+
+  /* работы: обложка слева, справа — категория, название, факты и теги (вместо обложки на всю
+     ширину). Теги — столбиком и чёрным, как на десктопе (РАУНД 56, по просьбе Лены; сначала
+     были строкой с переносом и голубыми) */
+  .work-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "image info"
+      "image meta";
+    grid-template-rows: auto 1fr;
+    column-gap: 24px;
+    row-gap: 24px;
+    align-items: start;
+  }
+  .work-image {
+    grid-area: image;
+    width: 100%;
+  }
+  .work-info {
+    grid-area: info;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+  .work-title {
+    font-size: clamp(32px, 5.5vw, 46px);
+  }
+  .work-number {
+    font-size: clamp(28px, 5vw, 42px);
+  }
+  /* факты — сразу под названием, теги — прижаты к низу карточки (вровень с низом обложки, а
+     если тегов много и они длиннее обложки — карточка просто вырастает): meta растянута на всю
+     оставшуюся высоту строки, у тегов margin-top:auto (РАУНД 57, по просьбе Лены) */
+  .work-meta {
+    grid-area: meta;
+    align-self: stretch;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    text-align: left;
+  }
+  .work-meta .work-tags {
+    margin-top: auto;
+  }
+
+  /* обо мне: текст и программы — рядом, в две колонки (а не друг под другом, как на телефоне;
+     РАУНД 58, по скриншоту Лены). Колонки поровну, программы внутри — свои две колонки. */
+  .about-body {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 40px;
+  }
+  .about-text,
+  .about-programs {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .work-facts {
+    align-items: flex-start;
+  }
+  .work-tags {
+    align-items: flex-start;
+  }
 }

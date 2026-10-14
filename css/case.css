@@ -261,7 +261,10 @@
   gap: 20px;
   align-items: flex-start;
   font-family: "GT America Mono", monospace;
-  font-size: 12px; /* РАУНД 48: было clamp(13px, 1.4vw, 19px) — подписи к работам во всех кейсах 12px */
+  /* РАУНД 60: снова как в Figma — 19px на холсте 1360 (1.4vw), не меньше 13px. В РАУНДЕ 48 были
+     12px, как у подписей карточек на других кейсах, но это заголовки разделов (другой шрифт и
+     роль) — рядом с крупными фото коллажа 12px терялись. Телефон/планшет — 16px, см. ниже. */
+  font-size: clamp(13px, 1.4vw, 19px);
   line-height: 1.1;
   text-transform: uppercase;
   color: #000;
@@ -324,7 +327,7 @@
    (position:absolute от .case-outro-note), подъём --outro-lift считает js/case-cards.js — высота
    подписи карточки в px, а коллаж в %, поэтому одним CSS точное значение не получить.
    Только >860px: на мобильном текст снова в обычном потоке (см. адаптацию ниже). */
-@media (min-width: 861px) {
+@media (min-width: 1101px) {
   .case-wrap--yandex .case-outro-note,
   .case-wrap--eng-flow .case-outro-note {
     position: relative;
@@ -356,7 +359,7 @@
    вычитаем его отрицательным margin. % у margin считается от ширины, а высота коллажа
    пропорциональна ширине (aspect-ratio), поэтому 208.5 / 1360 = 15.332% верно на любой ширине.
    61px, а не 80 — ещё 19px добавляет flex-gap самого .case-wrap. */
-@media (min-width: 861px) {
+@media (min-width: 1101px) {
   .case-wrap--young-con .case-outro-note {
     margin-top: calc(61px - 15.332%);
   }
@@ -563,7 +566,7 @@
 }
 
 /* ===== mobile: коллаж превращается в обычный вертикальный список ===== */
-@media (max-width: 860px) {
+@media (max-width: 1100px) {
   .case-top { flex-direction: column; gap: 32px; }
   .case-facts { width: 100%; }
 
@@ -626,7 +629,7 @@
    о проекте" (между ними в нашей разметке нет прямого соответствия в Figma — там этот
    участок прерывается блоком факты, которого у нас тут нет, — его уже подбирали на глаз
    отдельно, значение проверено по скриншотам и трогать не нужно). */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
   .case-top { margin-bottom: 41px; }
   .case-about { margin-bottom: 41px; }
 }
@@ -639,7 +642,7 @@
    350px (как и везде на сайте — см. main.css). Пока сделано только для Young Con: у остальных
    трёх кейс-страниц отдельного мобильного макета Лена ещё не присылала, у них остаётся общая
    адаптация выше без изменений (не трогаю по просьбе "verify only the requested screen"). */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
 
   .case-wrap { padding-top: calc(var(--nav-h, 110px) + 12px); } /* было +19px — в Dev Mode между хедером и "назад" 12px */
 
@@ -663,7 +666,11 @@
   .case-about-text { font-size: 16px; }
 
   /* --- подписи галерей: по Dev Mode gap между номером и текстом 12px (не 20), текст 16px (не clamp) --- */
-  .case-caption { gap: 12px; } /* font-size был 16px по Dev Mode — теперь общий 12px (РАУНД 48) */
+  /* 16px — как в мобильном Dev Mode (РАУНД 60: вернули после 12px из РАУНДА 48). Выравнивание —
+     по левому краю: по ширине в узкой колонке давало огромные пробелы между словами
+     ("спикерские   карточки,   инфографика"). На десктопе (широкая колонка) — по ширине, как было. */
+  .case-caption { gap: 12px; font-size: 16px; }
+  .case-caption-text { text-align: left; }
 
   /* --- сам коллаж: вместо абсолютного позиционирования — обычный поток, каждая галерея (1)-(4)
      своим flex-столбцом со своим внутренним зазором (подпись → фото), между галереями — общий
@@ -698,12 +705,17 @@
 
   /* (2) экраны сцен — пары в ряд (gap-12, высота ряда 150px, пропорции — см. style= у каждого
      .case-photo в young-con.html, flex/aspect-ratio там работают и на десктопе, но там их
-     перекрывают явные width/height в процентах, так что это чисто мобильные значения) */
+     перекрывают явные width/height в процентах, так что это чисто мобильные значения).
+     РАУНД 54: высота не 150px, а 150/350 ширины колонки (экран минус боковые отступы body —
+     та же clamp, что в main.css) — на телефоне (колонка 350px) те же 150px, на планшете ряд
+     растёт вместе с шириной (не меньше 150px — на телефонах уже 390px было ровно 150px, так и
+     осталось). Не aspect-ratio: фото внутри (height:100%) распирали ряд по высоте своих
+     картинок, пропорция не держалась. */
   .case-photo-pair {
     display: flex;
     gap: 12px;
     width: 100%;
-    height: 150px;
+    height: max(150px, calc((100vw - 2 * clamp(20px, 2.78vw, 40px)) * 150 / 350));
   }
   .case-canvas .case-photo-pair .case-photo {
     width: auto !important;
@@ -740,7 +752,7 @@
    строка фактов 13/24 вместо 24/24, зазор about 16 вместо 20), поэтому новые правила
    даны через .case-wrap--yandex, а не добавлены в общий блок — чтобы не задеть уже
    сверенные цифры Young Con. Числа сняты из Dev Mode (get_metadata, нода 130:10472). */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
 
   .case-wrap--yandex .case-facts-row--first { padding: 13px 0 24px; }
 
@@ -752,6 +764,7 @@
      лежат рядом с фото, а не внутри него (см. ниже); на остальных 6 карточках relative без
      смещений визуально ничем не отличается от static. */
   .case-wrap--yandex .case-card-group {
+    container-type: inline-size; /* РАУНД 54: для top стрелок карусели (50cqw), см. ниже */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -818,6 +831,12 @@
        карусель, а .case-card-group (см. выше), ей position:relative уже не нужен. */
     display: block !important;
     aspect-ratio: 1 / 1;
+    /* РАУНД 54: слайды (position:absolute; inset:0) должны отсчитываться от самой карусели.
+       Раньше точкой отсчёта случайно был transform анимации выезда (.case-canvas--card-reveal),
+       а без анимации (prefers-reduced-motion — класса нет) — вся .case-card-group: слайд
+       растягивался на фото + подпись и закрывал её. contain:layout делает карусель точкой
+       отсчёта, не трогая её инлайн left/top (в отличие от position:relative, см. выше). */
+    contain: layout;
   }
   .case-wrap--yandex .case-carousel img[data-slide] {
     position: absolute !important;
@@ -834,10 +853,12 @@
   .case-wrap--yandex .case-carousel-arrow {
     display: block !important;
     position: absolute !important;
-    /* 175px = половина высоты фото-карусели (350px, квадрат 1:1) — не 50%, так как
-       точка отсчёта теперь .case-card-group целиком (фото + отступ + метаданные), а не
-       сама .case-carousel (стрелки лежат в разметке рядом с фото, не внутри него) */
-    top: 175px !important;
+    /* половина высоты фото-карусели (квадрат 1:1, т.е. половина ширины карточки) — не 50%,
+       так как точка отсчёта — .case-card-group целиком (фото + отступ + метаданные), а не
+       сама .case-carousel (стрелки лежат в разметке рядом с фото, не внутри него).
+       РАУНД 54: было 175px (колонка телефона 350px) — теперь 50cqw от ширины карточки
+       (.case-card-group — контейнер, см. выше), чтобы работало и в колонках планшета */
+    top: 50cqw !important;
     transform: translateY(-50%);
     width: 10px !important;
     height: 18.8px !important;
@@ -861,7 +882,7 @@
    чтобы не задеть цифры других страниц. Где отличаются — отмечено отдельно (заголовок
    margin:16px, не 59/59; about-text 16px без clamp — тут не отличается, но указано явно
    для ясности). У фото Thothex (в отличие от Yandex) рамки в Dev Mode нет — не добавляю. */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
 
   /* --- заголовок: тут Dev Mode даёт совсем другой отступ сверху (16px), не 59 как у
      Yandex/Young Con — видимо, у Thothex блок "о проекте" короче и общий ритм другой --- */
@@ -960,7 +981,7 @@
    aspect-ratio на фото, в отличие от Thothex, не нужен — хватает already-общего
    width:100%/height:auto (запасной вариант браузера: height:100% у .case-photo img
    при auto-высоте родителя трактуется как auto, т.е. пропорции берутся из самого файла). */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
 
   /* --- заголовок: pt/pb сняты напрямую из Dev Mode (Project heading, нода 130:10244) —
      16/20, как у Thothex, не 59/20, как у Yandex/Young Con */
@@ -1021,7 +1042,7 @@
    Yandex, 16/20 у Thothex/eng flow — под старый порядок): между блоками по 40px вместе с
    flex-gap 19px у .case-wrap. Правило стоит в самом конце файла — перебивает постраничные
    .case-wrap--… .case-title с той же специфичностью. */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
   .case-wrap > .case-top {
     display: contents;
   }
@@ -1047,7 +1068,7 @@
    вровень с заголовком, следующая — вровень со "ссылкой". Обычные карточки — группы-колонки
    по 2 тега рядом (сетка 2×2, правила .case-wrap--… выше); тут — только два особых случая.
    Префикс .case-wrap — чтобы перебить постраничные .case-wrap--… правила выше. */
-@media (max-width: 480px) {
+@media (max-width: 1100px) {
   /* "ссылка" — на том же шаге от заголовка, что и вторая строка тегов (gap 10px у групп) */
   .case-wrap .case-card-link { margin-top: 10px; }
 
@@ -1083,8 +1104,14 @@
 
 /* РАУНД 48: на самых узких телефонах (320px, iPhone SE 1-го поколения) 4 тега --wide в одну
    строку со "ссылкой" не помещаются и наезжают на неё — там теги идут своей строкой под
-   "ссылкой", прижатые вправо (с 375px и шире всё помещается, проверено замером) */
-@media (max-width: 359px) {
+   "ссылкой", прижатые вправо (с 375px и шире всё помещается, проверено замером).
+   РАУНД 54: условие не по ширине экрана, а по ширине самой подписи (.case-card-meta —
+   контейнер) — на планшете подписи стоят в колонках, ширина экрана там ничего не говорит.
+   Подпись 319px = экран 359px минус боковые отступы по 20px. */
+@media (max-width: 1100px) {
+  .case-wrap .case-card-meta { container-type: inline-size; }
+}
+@container (max-width: 319px) {
   .case-wrap .case-card-row--wide .case-card-tags {
     position: static;
     margin-top: 10px;
@@ -1099,9 +1126,9 @@
    рядом с заголовком (тогда при 12px заголовок сжимается до ширины всего блока, т.е. самой
    длинной строки тегов, и переносится), а прижат абсолютно к правому верхнему углу строки.
    Короткая первая строка тегов помещается рядом с заголовком, длинная вторая — рядом с
-   короткой "ссылкой". На 320px не помещается — там теги уходят строкой вниз (правило
-   max-width:359px сразу ниже). */
-@media (max-width: 480px) {
+   короткой "ссылкой". В узкой подписи не помещается — там теги уходят строкой вниз
+   (@container сразу ниже: подпись до 329px, т.е. телефон 320px). */
+@media (max-width: 1100px) {
   .case-wrap .case-card-row--tags-top {
     display: block;
     position: relative;
@@ -1112,7 +1139,7 @@
     right: 0;
   }
 }
-@media (max-width: 359px) {
+@container (max-width: 329px) {
   .case-wrap .case-card-row--tags-top .case-card-tags {
     position: static;
     margin-top: 10px;
@@ -1121,11 +1148,93 @@
 }
 /* РАУНД 53: у разговорных клубов eng flow заголовок длиннее, чем у карточек Thothex — на 375px
    (iPhone SE/mini) до тегов оставалось ~5px, почти вплотную. Там теги уходят строкой вниз
-   раньше — уже с 389px, а не с 359px. На 390+ зазор от 20px. */
-@media (max-width: 389px) {
+   раньше — уже в подписи до 349px (экран 389px), а не 329px. На 390+ зазор от 20px. */
+@container (max-width: 349px) {
   .case-wrap--eng-flow .case-card-row--tags-top .case-card-tags {
     position: static;
     margin-top: 10px;
     justify-content: flex-end;
   }
+}
+
+/* ===== РАУНД 54: планшет (481–1100px) =====
+   Десктопный коллаж (фото и подписи абсолютно в % от холста 1360px) уже на 1024px ломается:
+   подписи у карточек переносятся на 2 строки и наезжают на соседние фото. Поэтому до 1100px
+   (iPad в обеих ориентациях) коллажа нет — работает раскладка из мобильных макетов Figma
+   (все бывшие @media max-width:480px блоки выше теперь до 1100px), а здесь — то, что на
+   планшете должно быть иначе, чем на телефоне. */
+@media (min-width: 481px) and (max-width: 1100px) {
+  /* заголовок кейса — крупнее телефонных 64/58px, но не десктопные 100/86 */
+  .case-title-main { font-size: clamp(64px, 11vw, 110px); }
+  .case-title-year { font-size: clamp(58px, 10vw, 100px); }
+
+  /* направления — строкой с переносом, прижатой вправо, а не столбиком на 9 строк */
+  .case-facts-tags ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px 16px;
+    max-width: 75%;
+  }
+
+  /* текст "о проекте" — на всю ширину колонки (РАУНД 59, по просьбе Лены; было до 640px) */
+  .case-about-text { width: 100%; font-size: 19px; line-height: 21px; }
+
+  /* итоговый текст + стрелка «наверх»: на телефоне стрелки нет (по макету), на планшете места
+     хватает — текст слева, стрелка справа внизу, как на десктопе */
+  .case-outro-note {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .case-wrap .case-outro-text { width: min(100%, 600px); margin-left: 0; }
+  .case-totop { display: block; }
+
+  /* Young Con, (2) экраны сцен, последний ряд (зал + инсталляция в холле): на телефоне правое
+     фото — узкая полоска 112px, на планшете левое при этом растягивалось на ~600px. Здесь
+     левое примерно в 1.5 раза уже, правое — шире: доли 4:3 (РАУНД 61, по просьбе Лены).
+     !important — перебивает инлайн flex из young-con.html */
+  .case-gallery--2 .case-photo-pair:last-child .case-photo:first-child { flex: 4 1 0 !important; }
+  .case-gallery--2 .case-photo-pair:last-child .case-photo:last-child { flex: 3 1 0 !important; }
+
+  /* Young Con, (4) баннеры хедлайнеров: на телефоне афиши на улице слева — узкие (151px), экран
+     справа — большой. На планшете наоборот (РАУНД 62, по просьбе Лены): афиши — крупно, экран —
+     поменьше, экран по-прежнему по центру высоты ряда. Сначала были доли 3:2 (афиши 60% ряда),
+     затем афиши уменьшены ещё на ~25% (до 45%), а экран пропорционально увеличен — занимает
+     всё оставшееся место ряда (55%) */
+  .case-photo-offset .case-photo:first-child { flex: 0 0 calc((100% - 24px) * 0.45) !important; }
+  .case-photo-offset .case-photo:last-child { flex: 1 1 0 !important; }
+}
+
+/* с 740px (iPad mini вертикально и шире) карточки — в две колонки: каждая колонка ~340-480px,
+   т.е. ширина телефона, так что мобильные подписи (12px, теги справа) ложатся как есть.
+   Галереи Thothex (мудборд мерча, экраны приложения) — на всю ширину. Young Con — галереи
+   с подписями разделов, остаются в одну колонку. */
+@media (min-width: 740px) and (max-width: 1100px) {
+  .case-canvas--yandex,
+  .case-canvas--thothex,
+  .case-canvas--eng-flow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px 24px;
+    align-items: start;
+  }
+  .case-canvas--thothex .case-card-group--gallery { grid-column: 1 / -1; }
+
+  /* мудборд мерча Thothex — сеткой 3×3 (на телефоне ряды 2+3+2+2 — на планшете фото по два
+     в ряд выходили огромными): ряды растворяются, все 9 фото — ячейки одной сетки, 3:4 */
+  .case-wrap--thothex .case-merch-gallery:not(.case-merch-gallery--visiom) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .case-wrap--thothex .case-merch-gallery:not(.case-merch-gallery--visiom) .case-merch-row {
+    display: contents;
+  }
+  .case-wrap--thothex .case-canvas .case-merch-row--tall .case-photo { aspect-ratio: 3 / 4; }
+
+  /* экраны Thothex visiom — 4 в ряд (на телефоне 2+2): ряды-пары встают рядом друг с другом */
+  .case-wrap--thothex .case-merch-gallery--visiom { flex-direction: row; }
+  .case-wrap--thothex .case-merch-gallery--visiom .case-merch-row { flex: 1 1 0; min-width: 0; }
 }
