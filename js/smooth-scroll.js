@@ -31,6 +31,19 @@
 
   window.__lenis = lenis;
 
+  /* РАУНД 66: прокрутка наверх (стрелка внизу кейса и т.п.) — медленнее и мягче, по просьбе
+     Лены: по умолчанию Lenis довозит через lerp, и с низа длинной страницы это пролетало почти
+     мгновенно. Здесь — явная длительность (растёт с расстоянием, 1.2–2.4с) и плавный разгон/
+     торможение (easeInOutCubic). */
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function scrollToTop() {
+    var duration = Math.min(2.4, Math.max(1.2, window.scrollY / 2500));
+    lenis.scrollTo(0, { duration: duration, easing: easeInOutCubic });
+  }
+  window.__scrollToTop = scrollToTop;
+
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     var hash = a.getAttribute("href");
     if (!hash || hash === "#") return;
@@ -38,7 +51,7 @@
     a.addEventListener("click", function (e) {
       if (hash === "#top") {
         e.preventDefault();
-        lenis.scrollTo(0);
+        scrollToTop();
         return;
       }
       var target = document.querySelector(hash);

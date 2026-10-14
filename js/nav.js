@@ -413,7 +413,7 @@
     close(false, href === "#top" || !!target);
     if (href === "#top") {
       e.preventDefault();
-      if (window.__lenis) window.__lenis.scrollTo(0);
+      if (window.__scrollToTop) window.__scrollToTop(); // та же мягкая прокрутка, что у стрелки (smooth-scroll.js)
       else window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }

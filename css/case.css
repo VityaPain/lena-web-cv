@@ -1168,14 +1168,8 @@
   .case-title-main { font-size: clamp(64px, 11vw, 110px); }
   .case-title-year { font-size: clamp(58px, 10vw, 100px); }
 
-  /* направления — строкой с переносом, прижатой вправо, а не столбиком на 9 строк */
-  .case-facts-tags ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 8px 16px;
-    max-width: 75%;
-  }
+  /* направления — столбиком справа, как на телефоне и десктопе (РАУНД 65, по просьбе Лены;
+     в РАУНДЕ 54 на планшете были строкой с переносом) */
 
   /* текст "о проекте" — на всю ширину колонки (РАУНД 59, по просьбе Лены; было до 640px) */
   .case-about-text { width: 100%; font-size: 19px; line-height: 21px; }
