@@ -803,12 +803,6 @@ html.is-webkit .nav-links a::after {
   text-transform: uppercase;
 }
 
-.contacts-link--pending {
-  color: #000;
-  opacity: 0.35;
-  cursor: default;
-}
-
 /* отступ снизу как верхний padding хедера */
 @media (min-width: 861px) {
   .contacts {
